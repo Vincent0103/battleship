@@ -1,16 +1,11 @@
-function Ship(length, hitsCount) {
+function Ship(length, hitsCount = 0) {
   const shipLength = length;
   let hits = hitsCount;
-  function hit() {
-    hits += 1;
-  }
 
-  function isSunk() {
-    if (shipLength === hits) return true;
-    return false;
-  }
+  const hit = () => { if (hits < shipLength) hits += 1; };
+  const isSunk = () => hits === shipLength;
 
-  return { hit, isSunk };
+  return { hit, isSunk, getHits: () => hits };
 }
 
 export default Ship;
