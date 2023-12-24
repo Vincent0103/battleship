@@ -20,7 +20,8 @@ This project is part of my journey through The Odin Project course, specifically
 
 ## Testing
 
-<!-- to be added -->
+- All the tests are located in the [/test](./src/tests/) folder.
+- Please keep in mind that it is using an experimental feature of jest testing that allows me to use import/export statements of ES6, for more information check the test npm script in [package.json](./package.json).
 
 ## License
 
