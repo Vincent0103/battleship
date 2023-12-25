@@ -59,7 +59,7 @@ const Gameboard = () => {
     if (areCellsAvailable(length, coordinates, orientation)) {
       return occupyCells(length, coordinates, orientation);
     }
-    throw Error('Ship cannot be placed in this area');
+    return false;
   };
 
   return { buildGrid, placeShip };

@@ -4,6 +4,7 @@ import Ship from '../ship';
 describe('Gameboard', () => {
   let gameboard1; let gameboard2; let gameboard3; let gameboard4;
   let ship1; let ship2; let ship3;
+  let currentGridPartToTest;
   beforeEach(() => {
     gameboard1 = Gameboard();
     gameboard2 = Gameboard();
@@ -32,8 +33,8 @@ describe('Gameboard', () => {
     ]);
   });
 
-  test.only('place ship correctly in the grid map', () => {
-    let currentGridPartToTest = gameboard2.placeShip(ship1.getLength(), [0, 2])[0].slice(2, 6);
+  test('place ship correctly in the grid map', () => {
+    currentGridPartToTest = gameboard2.placeShip(ship1.getLength(), [0, 2])[0].slice(2, 6);
     currentGridPartToTest.forEach((item) => {
       expect(item).toBeTruthy();
     });
@@ -47,5 +48,13 @@ describe('Gameboard', () => {
     currentGridPartToTest.forEach((item) => {
       expect(item[8]).toBeTruthy();
     });
+  });
+
+  test('ship can\'t be placed on an incorrect area of the grid', () => {
+    currentGridPartToTest = gameboard2.placeShip(ship2.getLength(), [2, 8], 'rightward');
+    expect(currentGridPartToTest).toBeFalsy();
+
+    currentGridPartToTest = gameboard3.placeShip(ship3.getLength(), [10, 1], 'downward');
+    expect(currentGridPartToTest).toBeFalsy();
   });
 });
