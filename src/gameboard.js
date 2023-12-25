@@ -21,6 +21,7 @@ const Gameboard = () => {
         grid[y + j][x] = true;
       }
     }
+    return grid;
   };
 
   const isCellAvailable = ([y, x], isPlaceable) => {
@@ -56,8 +57,9 @@ const Gameboard = () => {
 
   const placeShip = (length, coordinates, orientation = 'rightward') => {
     if (areCellsAvailable(length, coordinates, orientation)) {
-
+      return occupyCells(length, coordinates, orientation);
     }
+    throw Error('Ship cannot be placed in this area');
   };
 
   return { buildGrid, placeShip };
