@@ -11,17 +11,17 @@ const Gameboard = () => {
     return grid;
   };
 
-  // const occupyCells = (length, [y, x], orientation) => {
-  //   if (orientation === 'rightward') {
-  //     for (let i = 0; i < length; i += 1) {
-  //       grid[y][x + i] = true;
-  //     }
-  //   } else {
-  //     for (let j = 0; j < length; j += 1) {
-  //       grid[y + j][x] = true;
-  //     }
-  //   }
-  // };
+  const occupyCells = (length, [y, x], orientation) => {
+    if (orientation === 'rightward') {
+      for (let i = 0; i < length; i += 1) {
+        grid[y][x + i] = true;
+      }
+    } else {
+      for (let j = 0; j < length; j += 1) {
+        grid[y + j][x] = true;
+      }
+    }
+  };
 
   const isCellAvailable = ([y, x], isPlaceable) => {
     let canBePlaced = isPlaceable;
