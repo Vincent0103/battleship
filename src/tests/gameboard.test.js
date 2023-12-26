@@ -60,13 +60,15 @@ describe('Gameboard', () => {
   });
 
   describe('receive attack', () => {
-    gameboard2.placeShip(ship1, [0, 2], 1, 'downward');
-    gameboard2.placeShip(ship2, [3, 7], 1, 'downward');
-    gameboard2.placeShip(ship3, [1, 5], 1);
-    gameboard2.placeShip(ship4, [4, 1]);
-    gameboard2.placeShip(ship5, [5, 7], 0, 'downward');
-    gameboard2.placeShip(ship6, [9, 0], 1);
-    gameboard2.placeShip(ship7, [3, 4]);
+    beforeEach(() => {
+      gameboard2.placeShip(ship1, [0, 2], 1, 'downward');
+      gameboard2.placeShip(ship2, [3, 7], 1, 'downward');
+      gameboard2.placeShip(ship3, [1, 5], 1);
+      gameboard2.placeShip(ship4, [4, 1]);
+      gameboard2.placeShip(ship5, [5, 7], 0, 'downward');
+      gameboard2.placeShip(ship6, [9, 0], 1);
+      gameboard2.placeShip(ship7, [3, 4]);
+    });
 
     test('act correctly when given valid coordinates', () => {
       const ship4ReceivedAttack = gameboard2.receiveAttack([4, 3], 1);
