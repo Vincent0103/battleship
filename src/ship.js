@@ -1,12 +1,13 @@
-const Ship = (length, hitsCount = 0) => {
-  const shipLength = length;
+import incrementalId from './utilities.js';
+
+const Ship = (length, hitsCount = 0, id = incrementalId()) => {
   let hits = hitsCount;
 
-  const hit = () => { if (hits < shipLength) hits += 1; };
-  const isSunk = () => hits === shipLength;
+  const hit = () => { if (hits < length) hits += 1; };
+  const isSunk = () => hits === length;
 
   return {
-    hit, isSunk, getHits: () => hits, getLength: () => shipLength,
+    hit, isSunk, getHits: () => hits, getLength: () => length, getId: () => id,
   };
 };
 
