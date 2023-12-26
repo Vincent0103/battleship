@@ -59,7 +59,7 @@ describe('Gameboard', () => {
     expect(currentGridPartToTest).toBe(false);
   });
 
-  test('receive attack correctly when given valid coordinates', () => {
+  describe('receive attack', () => {
     gameboard2.placeShip(ship1, [0, 2], 1, 'downward');
     gameboard2.placeShip(ship2, [3, 7], 1, 'downward');
     gameboard2.placeShip(ship3, [1, 5], 1);
@@ -67,10 +67,24 @@ describe('Gameboard', () => {
     gameboard2.placeShip(ship5, [5, 7], 0, 'downward');
     gameboard2.placeShip(ship6, [9, 0], 1);
     gameboard2.placeShip(ship7, [3, 4]);
-    expect(gameboard2.receiveAttack([1, 2], 0).getId()).toEqual(ship1.getId());
-    expect(gameboard2.receiveAttack([4, 3], 1).getId()).toEqual(ship4.getId());
-    expect(typeof gameboard2.receiveAttack([0, 1], 0)).toEqual('object');
-    expect(typeof gameboard2.receiveAttack([5, 8], 1)).toEqual('object');
-    expect(gameboard2.receiveAttack([1, 6], 0).getId()).toEqual(ship3.getId());
+
+    test('act correctly when given valid coordinates', () => {
+      const ship4ReceivedAttack = gameboard2.receiveAttack([4, 3], 1);
+      const ship2ReceivedAttack = gameboard2.receiveAttack([6, 7], 0);
+
+      expect(gameboard2.receiveAttack([1, 2], 0).getId()).toEqual(ship1.getId());
+      expect(ship4ReceivedAttack.getId()).toEqual(ship4.getId());
+      expect(ship4ReceivedAttack.getHits()).toEqual(1);
+      expect(ship2ReceivedAttack.getId()).toEqual(ship2.getId());
+      expect(ship2ReceivedAttack.getHits()).toEqual(4);
+      expect(typeof gameboard2.receiveAttack([0, 1], 0)).toEqual('object');
+      expect(typeof gameboard2.receiveAttack([5, 8], 1)).toEqual('object');
+      expect(gameboard2.receiveAttack([1, 6], 0).getId()).toEqual(ship3.getId());
+    });
+
+    test('reject out of bound coordinates', () => {
+      expect(gameboard2.receiveAttack([12, 3], 1)).toBeFalsy();
+      expect(gameboard2.receiveAttack([5, 29], 1)).toBeFalsy();
+    });
   });
 });
