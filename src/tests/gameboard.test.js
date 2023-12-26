@@ -59,7 +59,7 @@ describe('Gameboard', () => {
     expect(currentGridPartToTest).toBe(false);
   });
 
-  describe('receive attack and missed shots coordinates', () => {
+  describe('receive attacks and missed shots coordinates', () => {
     beforeEach(() => {
       gameboard2.placeShip(ship1, [0, 2], 1, 'downward');
       gameboard2.placeShip(ship2, [3, 7], 1, 'downward');
@@ -70,7 +70,7 @@ describe('Gameboard', () => {
       gameboard2.placeShip(ship7, [3, 4]);
     });
 
-    test('act correctly when given valid coordinates', () => {
+    test('receiveAttacks() act correctly when given valid coordinates', () => {
       const ship4ReceivedAttack = gameboard2.receiveAttack([4, 3], 1);
       const ship2ReceivedAttack = gameboard2.receiveAttack([6, 7], 0);
 
@@ -84,7 +84,7 @@ describe('Gameboard', () => {
       expect(gameboard2.receiveAttack([1, 6], 0).getId()).toEqual(ship3.getId());
     });
 
-    test('reject out of bound coordinates', () => {
+    test('receiveAttacks() reject out of bound coordinates', () => {
       expect(gameboard2.receiveAttack([12, 3], 1)).toBeFalsy();
       expect(gameboard2.receiveAttack([5, 29], 1)).toBeFalsy();
     });
