@@ -21,11 +21,11 @@ describe('Gameboard', () => {
   test('grids built correctly', () => {
     const grids = gameboard1.buildGrids();
     grids.grid.forEach((line) => line.forEach((item) => {
-      expect(item.shipId).toBeFalsy();
+      expect(item.hasShip).toBeFalsy();
       expect(item.playerId).toEqual(0);
     }));
     grids.opponentsGrid.forEach((line) => line.forEach((item) => {
-      expect(item.shipId).toBeFalsy();
+      expect(item.hasShip).toBeFalsy();
       expect(item.playerId).toEqual(1);
     }));
   });
@@ -33,17 +33,17 @@ describe('Gameboard', () => {
   test('place ship correctly in the grid map', () => {
     currentGridPartToTest = gameboard2.placeShip(ship1, [0, 2])[0].slice(2, 6);
     currentGridPartToTest.forEach((item) => {
-      expect(item.shipId).toBeTruthy();
+      expect(item.hasShip).toBeTruthy();
     });
 
     currentGridPartToTest = gameboard3.placeShip(ship3, [6, 3], 'downward').slice(6, 8);
     currentGridPartToTest.forEach((item) => {
-      expect(item[3].shipId).toBeTruthy();
+      expect(item[3].hasShip).toBeTruthy();
     });
 
     currentGridPartToTest = gameboard4.placeShip(ship2, [3, 8], 'downward').slice(3, 9);
     currentGridPartToTest.forEach((item) => {
-      expect(item[8].shipId).toBeTruthy();
+      expect(item[8].hasShip).toBeTruthy();
     });
   });
 

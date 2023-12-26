@@ -9,7 +9,7 @@ const Gameboard = () => {
       [grid, opponentsGrid].forEach((item) => item.push([]));
       for (let j = 0; j < 10; j += 1) {
         [grid, opponentsGrid].forEach((item, id) => item[i].push(
-          { shipId: false, playerId: id },
+          { hasShip: false, playerId: id },
         ));
       }
     }
@@ -20,11 +20,11 @@ const Gameboard = () => {
   const occupyCells = ({ getLength, getId }, [y, x], orientation) => {
     if (orientation === 'rightward') {
       for (let i = 0; i < getLength(); i += 1) {
-        grid[y][x + i].shipId = getId();
+        grid[y][x + i].hasShip = getId();
       }
     } else {
       for (let j = 0; j < getLength(); j += 1) {
-        grid[y + j][x].shipId = getId();
+        grid[y + j][x].hasShip = getId();
       }
     }
     return grid;
@@ -33,7 +33,7 @@ const Gameboard = () => {
   const isCellAvailable = ([y, x], isPlaceable = true) => {
     let canBePlaced = isPlaceable;
     if (grid[y] === undefined || grid[y][x] === undefined) return false;
-    if (grid[y][x].shipId) canBePlaced = false;
+    if (grid[y][x].hasShip) canBePlaced = false;
     return canBePlaced;
   };
 
@@ -69,6 +69,8 @@ const Gameboard = () => {
   };
 
   // const receiveAttack = (coordinates) => {
+  //   const [x, y] = coordinates;
+  //   if (grid[x][y].ship)
   // }
 
   return { buildGrids, placeShip };
