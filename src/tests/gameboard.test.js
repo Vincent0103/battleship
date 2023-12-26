@@ -21,11 +21,11 @@ describe('Gameboard', () => {
   test('grids built correctly', () => {
     const grids = gameboard1.buildGrids();
     grids.grid.forEach((line) => line.forEach((item) => {
-      expect(item.hasShip).toBeFalsy();
+      expect(item.hasShip).toBe(false);
       expect(item.playerId).toEqual(0);
     }));
     grids.opponentsGrid.forEach((line) => line.forEach((item) => {
-      expect(item.hasShip).toBeFalsy();
+      expect(item.hasShip).toBe(false);
       expect(item.playerId).toEqual(1);
     }));
   });
@@ -33,25 +33,25 @@ describe('Gameboard', () => {
   test('place ship correctly in the grid map', () => {
     currentGridPartToTest = gameboard2.placeShip(ship1, [0, 2])[0].slice(2, 6);
     currentGridPartToTest.forEach((item) => {
-      expect(item.hasShip).toBeTruthy();
+      expect(Number.isInteger(item.hasShip)).toBeTruthy();
     });
 
     currentGridPartToTest = gameboard3.placeShip(ship3, [6, 3], 'downward').slice(6, 8);
     currentGridPartToTest.forEach((item) => {
-      expect(item[3].hasShip).toBeTruthy();
+      expect(Number.isInteger(item[3].hasShip)).toBeTruthy();
     });
 
     currentGridPartToTest = gameboard4.placeShip(ship2, [3, 8], 'downward').slice(3, 9);
     currentGridPartToTest.forEach((item) => {
-      expect(item[8].hasShip).toBeTruthy();
+      expect(Number.isInteger(item[8].hasShip)).toBeTruthy();
     });
   });
 
   test('ship can\'t be placed on an incorrect area of the grid', () => {
     currentGridPartToTest = gameboard2.placeShip(ship2, [2, 8], 'rightward');
-    expect(currentGridPartToTest).toBeFalsy();
+    expect(currentGridPartToTest).toBe(false);
 
     currentGridPartToTest = gameboard3.placeShip(ship3, [10, 1], 'downward');
-    expect(currentGridPartToTest).toBeFalsy();
+    expect(currentGridPartToTest).toBe(false);
   });
 });

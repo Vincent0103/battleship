@@ -1,8 +1,9 @@
 import Ship from './ship.js';
 
 const Gameboard = () => {
-  const grid = [];
-  const opponentsGrid = [];
+  const partnerShips = []; const opponentShips = [];
+  const grid = []; const opponentsGrid = [];
+  // const missedShotsCoordinates = [];
 
   const buildGrids = () => {
     for (let i = 0; i < 10; i += 1) {
@@ -16,6 +17,25 @@ const Gameboard = () => {
 
     return { grid, opponentsGrid };
   };
+
+  // const getShipFromCell = (x, y, ofPlayerId) => {
+  //   let targetId;
+  //   let ship;
+  //   if (ofPlayerId === 1) {
+  //     targetId = opponentsGrid[x][y].hasShip;
+  //     ship = opponentShips.forEach((opponentShip) => {
+  //       if (opponentShip.getId() === targetId) return targetId;
+  //       throw new Error('Couldn\'t find the ship');
+  //     });
+  //   } else {
+  //     targetId = grid[x][y].hasShip;
+  //     ship = partnerShips.forEach((partnerShip) => {
+  //       if (partnerShip.getId() === targetId) return targetId;
+  //       throw new Error('Couldn\'t find the ship');
+  //     });
+  //   }
+  //   return ship;
+  // };
 
   const occupyCells = ({ getLength, getId }, [y, x], orientation) => {
     if (orientation === 'rightward') {
@@ -63,6 +83,7 @@ const Gameboard = () => {
 
   const placeShip = (ship, coordinates, orientation = 'rightward') => {
     if (areCellsAvailable(ship.getLength(), coordinates, orientation)) {
+      partnerShips.push(ship);
       return occupyCells(ship, coordinates, orientation);
     }
     return false;
@@ -70,8 +91,13 @@ const Gameboard = () => {
 
   // const receiveAttack = (coordinates) => {
   //   const [x, y] = coordinates;
-  //   if (grid[x][y].ship)
-  // }
+  //   if (Number.isInteger(opponentsGrid[x][y].hasShip)) {
+  //     const ship = getShipFromCell(x, y, 1);
+  //     ship.hit();
+  //   } else {
+
+  //   }
+  // };
 
   return { buildGrids, placeShip };
 };
