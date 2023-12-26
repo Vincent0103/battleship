@@ -103,7 +103,16 @@ const Gameboard = () => {
     return missedShotCoordinates;
   };
 
-  return { buildGrids, placeShip, receiveAttack };
+  const getMissedShotsCoordinates = () => missedShotsCoordinates;
+
+  // const areAllShipsSunk = (ofPlayerId) => {
+  //   const playersShips = (ofPlayerId === 0) ? partnerShips : opponentShips;
+  //   return playersShips.every((ship) => ship.isSunk());
+  // };
+
+  return {
+    buildGrids, placeShip, receiveAttack, getMissedShotsCoordinates,
+  };
 };
 
 export default Gameboard;

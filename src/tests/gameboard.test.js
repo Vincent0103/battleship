@@ -59,7 +59,7 @@ describe('Gameboard', () => {
     expect(currentGridPartToTest).toBe(false);
   });
 
-  describe('receive attack', () => {
+  describe('receive attack and missed shots coordinates', () => {
     beforeEach(() => {
       gameboard2.placeShip(ship1, [0, 2], 1, 'downward');
       gameboard2.placeShip(ship2, [3, 7], 1, 'downward');
@@ -87,6 +87,17 @@ describe('Gameboard', () => {
     test('reject out of bound coordinates', () => {
       expect(gameboard2.receiveAttack([12, 3], 1)).toBeFalsy();
       expect(gameboard2.receiveAttack([5, 29], 1)).toBeFalsy();
+    });
+
+    test('get correct missed shots coordinates', () => {
+      gameboard2.receiveAttack([0, 1], 0);
+      gameboard2.receiveAttack([5, 8], 1);
+      gameboard2.receiveAttack([9, 7], 0);
+      const missedShotsCoordinates = gameboard2.getMissedShotsCoordinates();
+      expect(missedShotsCoordinates[0].coordinates).toEqual([0, 1]);
+      expect(missedShotsCoordinates[1].coordinates).toEqual([5, 8]);
+      expect(missedShotsCoordinates[2].coordinates).toEqual([9, 7]);
+      expect(missedShotsCoordinates[2].ofPlayerId).toEqual(0);
     });
   });
 });
