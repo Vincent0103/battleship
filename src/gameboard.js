@@ -9,9 +9,7 @@ const Gameboard = () => {
     for (let i = 0; i < 10; i += 1) {
       [grid, opponentGrid].forEach((item) => item.push([]));
       for (let j = 0; j < 10; j += 1) {
-        [grid, opponentGrid].forEach((item, id) => item[i].push(
-          { shipId: false, playerId: id },
-        ));
+        [grid, opponentGrid].forEach((item) => item[i].push({ shipId: null }));
       }
     }
 

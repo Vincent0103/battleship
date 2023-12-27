@@ -25,12 +25,10 @@ describe('Gameboard', () => {
   test('grids built correctly', () => {
     const grids = gameboard1.buildGrids();
     grids.grid.forEach((line) => line.forEach((item) => {
-      expect(item.shipId).toBe(false);
-      expect(item.playerId).toEqual(0);
+      expect(item.shipId).toBeNull();
     }));
     grids.opponentGrid.forEach((line) => line.forEach((item) => {
-      expect(item.shipId).toBe(false);
-      expect(item.playerId).toEqual(1);
+      expect(item.shipId).toBeNull();
     }));
   });
 
