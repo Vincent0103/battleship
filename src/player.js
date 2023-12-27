@@ -1,12 +1,11 @@
 import Gameboard from './gameboard';
+import { containsSubArray } from './utilities';
 import Ship from './ship';
 
 const Player = () => {
   let gameboard;
-  const player1 = { id: 0, turn: true };
-  const player2 = { id: 1, turn: false };
-  const attackedCoordinates = [];
-  const AIAttackedCoordinates = [];
+  const player1 = { id: 0, turn: true, attackedCoordinates: [] };
+  const player2 = { id: 1, turn: false, attackedCoordinates: [] };
   let gameMode;
 
   const initializeDefaultShips = (gameboard) => {
@@ -22,16 +21,19 @@ const Player = () => {
     gameboard.placeShip(Ship(2), [0, 0], player2.id, 'downward');
   };
 
-  const getAttackedCoordinates = () => attackedCoordinates;
+  const getAttackedCoordinates = (ofPlayerId) => {
+    if (ofPlayerId === 0) return player1.attackedCoordinates;
+    if (ofPlayerId === 1) return player2.attackedCoordinates;
+    return [player1.attackedCoordinates, player2.attackedCoordinates];
+  };
 
   const getRandomCoordinates = () => [Math.round(Math.random() * 9), Math.round(Math.random() * 9)];
 
   const getValidAICoordinates = () => {
     const currentCoordinates = getRandomCoordinates();
-    if (AIAttackedCoordinates.includes(currentCoordinates)) {
+    if (containsSubArray(player2.attackedCoordinates, currentCoordinates)) {
       return getValidAICoordinates();
     }
-    AIAttackedCoordinates.push(currentCoordinates);
     return currentCoordinates;
   };
 
@@ -39,28 +41,37 @@ const Player = () => {
     if (!player2.turn) {
       player1.turn = false;
       player2.turn = true;
+    } else {
+      player1.turn = true;
+      player2.turn = false;
     }
-    player1.turn = true;
-    player2.turn = false;
   };
 
   const attackAI = () => {
     const currentCoordinates = getValidAICoordinates();
-    if (gameboard.receiveAttack(currentCoordinates, player2.id)) {
-      attackedCoordinates.push(currentCoordinates);
+    if (gameboard.receiveAttack(currentCoordinates, player2.id)
+    && !containsSubArray(player2.attackedCoordinates, currentCoordinates)) {
+      player2.attackedCoordinates.push(currentCoordinates);
       changeTurn();
-    } else attackAI();
+      return true;
+    }
+    attackAI();
+    return false;
   };
 
   const attack = (coordinates) => {
     if (!gameboard.areAllShipsSunk(player1.id) || !gameboard.areAllShipsSunk(player2.id)) {
-      const currentPlayerId = (player1.turn) ? player1.id : player2.id;
-      if (gameboard.receiveAttack(coordinates, currentPlayerId)) {
-        attackedCoordinates.push(coordinates);
+      const currentPlayer = (player1.turn) ? player1 : player2;
+      if (gameboard.receiveAttack(coordinates, currentPlayer.id)
+      && !containsSubArray(currentPlayer.attackedCoordinates, coordinates)) {
+        currentPlayer.attackedCoordinates.push(coordinates);
         changeTurn();
         if (gameMode === 'computer') attackAI();
+        return true;
       }
+      return false;
     }
+    return false;
   };
 
   const startGame = (mode = 'computer') => {

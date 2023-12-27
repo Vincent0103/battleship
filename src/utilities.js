@@ -6,4 +6,11 @@ const incrementalId = (defaultId) => {
   return ID;
 };
 
+const containsSubArray = (rootArray, targetArray) => {
+  const rootArrayString = rootArray.map((array) => array.toString());
+  const targetArrayString = targetArray.toString();
+  return rootArrayString.includes(targetArrayString);
+};
+
 export default incrementalId;
+export { containsSubArray };
