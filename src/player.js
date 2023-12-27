@@ -4,6 +4,7 @@ import Ship from './ship';
 const Player = () => {
   const player1 = { id: 0, turn: true };
   const player2 = { id: 1, turn: false };
+  const AIAttackedCoordinates = [];
 
   const initializeDefaultShips = (gameboard) => {
     gameboard.placeShip(Ship(5), [1, 5], player1.id);
@@ -18,10 +19,16 @@ const Player = () => {
     gameboard.placeShip(Ship(2), [0, 0], player2.id, 'downward');
   };
 
-  // const getValidAICoordinates = () => {
+  const getRandomCoordinates = () => [Math.round(Math.random() * 9), Math.round(Math.random() * 9)];
 
-  //   [Math.round(Math.random() * 9), Math.round(Math.random() * 9)];
-  // }
+  const getValidAICoordinates = () => {
+    const currentCoordinates = getRandomCoordinates();
+    if (AIAttackedCoordinates.includes(currentCoordinates)) {
+      return getValidAICoordinates();
+    }
+    AIAttackedCoordinates.push(currentCoordinates);
+    return AIAttackedCoordinates;
+  };
 
   const changeTurn = () => {
     if (!player2.turn) {

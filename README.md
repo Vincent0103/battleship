@@ -34,3 +34,4 @@ The Odin Project for providing valuable resources and guidance.
 ### TODO
 
 - tests for player cant attack his own boats
+- check for adjacent hits whenever ai hit a part of the boat
