@@ -31,4 +31,6 @@ This project is licensed under the Layboy License.
 
 The Odin Project for providing valuable resources and guidance.
 
-<!-- cant attack to own boats. -->
+### TODO
+
+- tests for player cant attack his own boats
