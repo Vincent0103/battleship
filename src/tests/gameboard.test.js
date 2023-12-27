@@ -14,11 +14,11 @@ describe('Gameboard', () => {
     gameboard4 = Gameboard();
     gameboard4.buildGrids();
     ship1 = Ship(4);
-    ship2 = Ship(6, 3);
+    ship2 = Ship(6);
     ship3 = Ship(2);
     ship4 = Ship(5);
     ship5 = Ship(1);
-    ship6 = Ship(3, 2);
+    ship6 = Ship(3);
     ship7 = Ship(5);
   });
 
@@ -70,7 +70,7 @@ describe('Gameboard', () => {
       gameboard2.placeShip(ship7, [3, 4]);
     });
 
-    test('receiveAttacks() act correctly when given valid coordinates', () => {
+    test('act correctly when given valid coordinates', () => {
       const ship4ReceivedAttack = gameboard2.receiveAttack([4, 3], 1);
       const ship2ReceivedAttack = gameboard2.receiveAttack([6, 7], 0);
 
@@ -78,15 +78,26 @@ describe('Gameboard', () => {
       expect(ship4ReceivedAttack.getId()).toEqual(ship4.getId());
       expect(ship4ReceivedAttack.getHits()).toEqual(1);
       expect(ship2ReceivedAttack.getId()).toEqual(ship2.getId());
-      expect(ship2ReceivedAttack.getHits()).toEqual(4);
+      expect(ship2ReceivedAttack.getHits()).toEqual(1);
       expect(typeof gameboard2.receiveAttack([0, 1], 0)).toEqual('object');
       expect(typeof gameboard2.receiveAttack([5, 8], 1)).toEqual('object');
       expect(gameboard2.receiveAttack([1, 6], 0).getId()).toEqual(ship3.getId());
     });
 
-    test('receiveAttacks() reject out of bound coordinates', () => {
+    test('reject out of bound coordinates', () => {
       expect(gameboard2.receiveAttack([12, 3], 1)).toBeFalsy();
       expect(gameboard2.receiveAttack([5, 29], 1)).toBeFalsy();
+    });
+
+    test('can\'t hit twice the same cell when receiving attacks', () => {
+      expect(gameboard2.receiveAttack([4, 3], 1).getHits()).toEqual(1);
+      expect(gameboard2.receiveAttack([4, 3], 1)).toBeFalsy();
+      expect(gameboard2.receiveAttack([4, 2], 1).getHits()).toEqual(2);
+      expect(gameboard2.receiveAttack([4, 1], 1).getHits()).toEqual(3);
+      expect(gameboard2.receiveAttack([4, 1], 1)).toBeFalsy();
+      expect(gameboard2.receiveAttack([4, 4], 1).getHits()).toEqual(4);
+      expect(gameboard2.receiveAttack([4, 5], 1).getHits()).toEqual(5);
+      expect(typeof gameboard2.receiveAttack([4, 6], 1)).toEqual('object');
     });
 
     test('get correct missed shots coordinates', () => {
@@ -98,6 +109,47 @@ describe('Gameboard', () => {
       expect(missedShotsCoordinates[1].coordinates).toEqual([5, 8]);
       expect(missedShotsCoordinates[2].coordinates).toEqual([9, 7]);
       expect(missedShotsCoordinates[2].ofPlayerId).toEqual(0);
+    });
+  });
+
+  describe('check if all ships are sunk', () => {
+    beforeEach(() => {
+      gameboard3.placeShip(ship1, [0, 2], 1, 'downward'); // 0, 1, 2, 3 || 2, 2, 2, 2
+      gameboard3.placeShip(ship3, [3, 7], 0, 'downward'); // 3, 4 || 7, 7
+      gameboard3.placeShip(ship5, [1, 5], 1); // 1 || 5
+      gameboard3.placeShip(ship6, [2, 1]); // 2, 2, 2 || 1, 2, 3
+    });
+
+    test('all ships are not sunk when no one attacked', () => {
+      expect(gameboard3.areAllShipsSunk(0)).toBeFalsy();
+      expect(gameboard3.areAllShipsSunk(1)).toBeFalsy();
+    });
+
+    test('ships aren\'t sunk when there are some boats hit', () => {
+      gameboard3.receiveAttack([0, 2], 0);
+      gameboard3.receiveAttack([3, 7], 1);
+      gameboard3.receiveAttack([1, 2], 0);
+      gameboard3.receiveAttack([4, 7], 1);
+      gameboard3.receiveAttack([2, 2], 0);
+      gameboard3.receiveAttack([2, 1], 1);
+      gameboard3.receiveAttack([6, 8], 0);
+
+      expect(gameboard3.areAllShipsSunk(0)).toBeFalsy();
+      expect(gameboard3.areAllShipsSunk(1)).toBeFalsy();
+    });
+
+    test('partner ships are all sunk', () => {
+      gameboard3.receiveAttack([0, 2], 0);
+      gameboard3.receiveAttack([3, 7], 1);
+      gameboard3.receiveAttack([1, 2], 0);
+      gameboard3.receiveAttack([4, 7], 1);
+      gameboard3.receiveAttack([2, 2], 0);
+      gameboard3.receiveAttack([2, 1], 1);
+      gameboard3.receiveAttack([2, 2], 1);
+      gameboard3.receiveAttack([2, 3], 1);
+
+      expect(gameboard3.areAllShipsSunk(0)).toBeTruthy();
+      expect(gameboard3.areAllShipsSunk(1)).toBeFalsy();
     });
   });
 });

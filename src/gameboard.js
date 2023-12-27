@@ -18,24 +18,28 @@ const Gameboard = () => {
     return { grid, opponentGrid };
   };
 
-  const getShipFromCell = (y, x, ofPlayerId) => {
-    const [currentGrid, ships] = (ofPlayerId === 1)
-      ? [opponentGrid, opponentShips] : [grid, partnerShips];
-    const targetId = currentGrid[y][x].shipId;
-    const [shipRetrieved] = ships.filter((opponentShip) => opponentShip.getId() === targetId);
+  const getShipFromCell = (cell, ofPlayerId) => {
+    const ships = (ofPlayerId === 1) ? opponentShips : partnerShips;
+    const targetId = cell.shipId;
+    const [shipRetrieved] = ships.filter((ship) => ship.getId() === targetId);
     if (!shipRetrieved) throw new Error('Couldn\'t find the ship');
     return shipRetrieved;
   };
 
   const occupyCells = ({ getLength, getId }, [y, x], ofPlayerId, orientation) => {
     const currentGrid = (ofPlayerId === 0) ? grid : opponentGrid;
+    let currentCell;
     if (orientation === 'rightward') {
       for (let i = 0; i < getLength(); i += 1) {
-        currentGrid[y][x + i].shipId = getId();
+        currentCell = currentGrid[y][x + i];
+        currentCell.shipId = getId();
+        currentCell.isHit = false;
       }
     } else {
       for (let j = 0; j < getLength(); j += 1) {
-        currentGrid[y + j][x].shipId = getId();
+        currentCell = currentGrid[y + j][x];
+        currentCell.shipId = getId();
+        currentCell.isHit = false;
       }
     }
     return currentGrid;
@@ -93,11 +97,16 @@ const Gameboard = () => {
     const [currentGrid, getShipFromPlayerId] = (ofPlayerId === 0)
       ? [opponentGrid, 1] : [grid, 0];
     if (currentGrid[y] === undefined || currentGrid[y][x] === undefined) return false;
-    if (Number.isInteger(currentGrid[y][x].shipId)) {
-      const ship = getShipFromCell(y, x, getShipFromPlayerId);
+    const currentCell = currentGrid[y][x];
+
+    if (Number.isInteger(currentCell.shipId) && !currentCell.isHit) {
+      const ship = getShipFromCell(currentCell, getShipFromPlayerId);
       ship.hit();
+      currentCell.isHit = true;
       return ship;
     }
+    if (currentCell.isHit) return false;
+
     const missedShotCoordinates = { coordinates, ofPlayerId };
     missedShotsCoordinates.push(missedShotCoordinates);
     return missedShotCoordinates;
