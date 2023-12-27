@@ -2,9 +2,12 @@ import Gameboard from './gameboard';
 import Ship from './ship';
 
 const Player = () => {
+  let gameboard;
   const player1 = { id: 0, turn: true };
   const player2 = { id: 1, turn: false };
+  const attackedCoordinates = [];
   const AIAttackedCoordinates = [];
+  let gameMode;
 
   const initializeDefaultShips = (gameboard) => {
     gameboard.placeShip(Ship(5), [1, 5], player1.id);
@@ -19,6 +22,8 @@ const Player = () => {
     gameboard.placeShip(Ship(2), [0, 0], player2.id, 'downward');
   };
 
+  const getAttackedCoordinates = () => attackedCoordinates;
+
   const getRandomCoordinates = () => [Math.round(Math.random() * 9), Math.round(Math.random() * 9)];
 
   const getValidAICoordinates = () => {
@@ -27,35 +32,45 @@ const Player = () => {
       return getValidAICoordinates();
     }
     AIAttackedCoordinates.push(currentCoordinates);
-    return AIAttackedCoordinates;
+    return currentCoordinates;
   };
 
   const changeTurn = () => {
     if (!player2.turn) {
       player1.turn = false;
       player2.turn = true;
-      return player2.id;
     }
     player1.turn = true;
     player2.turn = false;
-    return player1.id;
   };
 
-  const startGame = () => {
-    const gameboard = Gameboard();
-    gameboard.buildGrids();
-    initializeDefaultShips(gameboard);
-    while (!gameboard.areAllShipsSunk(player1.id) || !gameboard.areAllShipsSunk(player2.id)) {
-      let playerTurnId = 0;
-      gameboard.receiveAttack([0, 8], playerTurnId);
-      playerTurnId = changeTurn();
-      gameboard.receiveAttack([4, 3], playerTurnId);
-      playerTurnId = changeTurn();
-      gameboard.receiveAttack([5, 6], playerTurnId);
-      playerTurnId = changeTurn();
-      gameboard.receiveAttack([1, 2], playerTurnId);
+  const attackAI = () => {
+    const currentCoordinates = getValidAICoordinates();
+    if (gameboard.receiveAttack(currentCoordinates, player2.id)) {
+      attackedCoordinates.push(currentCoordinates);
+      changeTurn();
+    } else attackAI();
+  };
+
+  const attack = (coordinates) => {
+    if (!gameboard.areAllShipsSunk(player1.id) || !gameboard.areAllShipsSunk(player2.id)) {
+      const currentPlayerId = (player1.turn) ? player1.id : player2.id;
+      if (gameboard.receiveAttack(coordinates, currentPlayerId)) {
+        attackedCoordinates.push(coordinates);
+        changeTurn();
+        if (gameMode === 'computer') attackAI();
+      }
     }
   };
 
-  return {};
+  const startGame = (mode = 'computer') => {
+    gameboard = Gameboard();
+    gameboard.buildGrids();
+    initializeDefaultShips(gameboard);
+    gameMode = mode;
+  };
+
+  return { startGame, attack, getAttackedCoordinates };
 };
+
+export default Player;
