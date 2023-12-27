@@ -92,9 +92,16 @@ const Gameboard = () => {
     return false;
   };
 
-  const receiveAttack = (coordinates, ofPlayerId) => {
+  const areAllShipsSunk = (ofPlayerId) => {
+    const playersShips = (ofPlayerId === 0) ? partnerShips : opponentShips;
+    return playersShips.every((ship) => ship.isSunk());
+  };
+
+  const receiveAttack = (coordinates, toPlayerId) => {
+    if (areAllShipsSunk(0) || areAllShipsSunk(1)) return false;
     const [y, x] = coordinates;
-    const [currentGrid, getShipFromPlayerId] = (ofPlayerId === 0)
+    const currentId = toPlayerId;
+    const [currentGrid, getShipFromPlayerId] = (currentId === 0)
       ? [opponentGrid, 1] : [grid, 0];
     if (currentGrid[y] === undefined || currentGrid[y][x] === undefined) return false;
     const currentCell = currentGrid[y][x];
@@ -107,17 +114,12 @@ const Gameboard = () => {
     }
     if (currentCell.isHit) return false;
 
-    const missedShotCoordinates = { coordinates, ofPlayerId };
+    const missedShotCoordinates = { coordinates, ofPlayerId: currentId };
     missedShotsCoordinates.push(missedShotCoordinates);
     return missedShotCoordinates;
   };
 
   const getMissedShotsCoordinates = () => missedShotsCoordinates;
-
-  const areAllShipsSunk = (ofPlayerId) => {
-    const playersShips = (ofPlayerId === 0) ? partnerShips : opponentShips;
-    return playersShips.every((ship) => ship.isSunk());
-  };
 
   return {
     buildGrids, placeShip, receiveAttack, getMissedShotsCoordinates, areAllShipsSunk,

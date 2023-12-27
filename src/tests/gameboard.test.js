@@ -19,7 +19,7 @@ describe('Gameboard', () => {
     ship4 = Ship(5);
     ship5 = Ship(1);
     ship6 = Ship(3);
-    ship7 = Ship(5);
+    ship7 = Ship(2);
   });
 
   test('grids built correctly', () => {
@@ -64,10 +64,10 @@ describe('Gameboard', () => {
       gameboard2.placeShip(ship1, [0, 2], 1, 'downward');
       gameboard2.placeShip(ship2, [3, 7], 1, 'downward');
       gameboard2.placeShip(ship3, [1, 5], 1);
-      gameboard2.placeShip(ship4, [4, 1]);
-      gameboard2.placeShip(ship5, [5, 7], 0, 'downward');
+      gameboard2.placeShip(ship4, [4, 1]); // 5
+      gameboard2.placeShip(ship5, [5, 7], 0, 'downward'); // 1
       gameboard2.placeShip(ship6, [9, 0], 1);
-      gameboard2.placeShip(ship7, [3, 4]);
+      gameboard2.placeShip(ship7, [3, 4]); // 2
     });
 
     test('act correctly when given valid coordinates', () => {
@@ -100,6 +100,22 @@ describe('Gameboard', () => {
       expect(typeof gameboard2.receiveAttack([4, 6], 1)).toEqual('object');
     });
 
+    test('can\'t receive attacks if a player\'s ships are all sunk', () => {
+      gameboard3.receiveAttack([4, 1], 1);
+      gameboard3.receiveAttack([3, 2], 0);
+      gameboard3.receiveAttack([4, 2], 1);
+      gameboard3.receiveAttack([5, 5], 0);
+      gameboard3.receiveAttack([4, 3], 1);
+      gameboard3.receiveAttack([4, 4], 1);
+      gameboard3.receiveAttack([4, 5], 1);
+      gameboard3.receiveAttack([5, 7], 1);
+      gameboard3.receiveAttack([3, 4], 1);
+      gameboard3.receiveAttack([3, 5], 1);
+      expect(gameboard3.receiveAttack([4, 5], 0)).toBeFalsy();
+      expect(gameboard3.receiveAttack([6, 8], 0)).toBeFalsy();
+      expect(gameboard3.receiveAttack([5, 8], 1)).toBeFalsy();
+    });
+
     test('get correct missed shots coordinates', () => {
       gameboard2.receiveAttack([0, 1], 0);
       gameboard2.receiveAttack([5, 8], 1);
@@ -114,10 +130,10 @@ describe('Gameboard', () => {
 
   describe('check if all ships are sunk', () => {
     beforeEach(() => {
-      gameboard3.placeShip(ship1, [0, 2], 1, 'downward'); // 0, 1, 2, 3 || 2, 2, 2, 2
-      gameboard3.placeShip(ship3, [3, 7], 0, 'downward'); // 3, 4 || 7, 7
-      gameboard3.placeShip(ship5, [1, 5], 1); // 1 || 5
-      gameboard3.placeShip(ship6, [2, 1]); // 2, 2, 2 || 1, 2, 3
+      gameboard3.placeShip(ship1, [0, 2], 1, 'downward');
+      gameboard3.placeShip(ship3, [3, 7], 0, 'downward');
+      gameboard3.placeShip(ship5, [1, 5], 1);
+      gameboard3.placeShip(ship6, [2, 1]);
     });
 
     test('all ships are not sunk when no one attacked', () => {
