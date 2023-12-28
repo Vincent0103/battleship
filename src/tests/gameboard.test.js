@@ -24,7 +24,7 @@ describe('Gameboard', () => {
 
   test('grids built correctly', () => {
     const grids = gameboard1.buildGrids();
-    grids.grid.forEach((line) => line.forEach((item) => {
+    grids.partnerGrid.forEach((line) => line.forEach((item) => {
       expect(item.shipId).toBeNull();
     }));
     grids.opponentGrid.forEach((line) => line.forEach((item) => {

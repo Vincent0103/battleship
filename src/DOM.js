@@ -1,8 +1,20 @@
 const DOM = () => {
-  const addGrids = () => {
-    const partnerGridContainer = document.createElement('div');
+  let partnerGridContainer;
+  let opponentGridContainer;
+
+  const populateDOMGrid = (gameboard, ofPlayerId) => {
+    gameboard.forEach((line, y) => line.forEach((square, x) => {
+      if (Number.isInteger(square.shipId)) {
+        if (ofPlayerId === 0) partnerGridContainer.children[y].children[x].classList.add('ship');
+        else opponentGridContainer.children[y].children[x].classList.add('ship');
+      }
+    }));
+  };
+
+  const buildDOMGrids = () => {
+    partnerGridContainer = document.createElement('div');
     partnerGridContainer.classList.add('grid-container');
-    const opponentGridContainer = document.createElement('div');
+    opponentGridContainer = document.createElement('div');
     opponentGridContainer.classList.add('grid-container');
 
     [partnerGridContainer, opponentGridContainer].forEach((gridContainer) => {
@@ -23,9 +35,9 @@ const DOM = () => {
     return [partnerGridContainer, opponentGridContainer];
   };
 
-  const addContent = () => addGrids();
+  const addContent = () => buildDOMGrids();
 
-  return { addContent };
+  return { addContent, populateDOMGrid };
 };
 
 export default DOM;

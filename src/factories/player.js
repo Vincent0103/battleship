@@ -81,7 +81,9 @@ const Player = () => {
     gameMode = mode;
   };
 
-  return { startGame, attack, getAttackedCoordinates };
+  return {
+    startGame, attack, getAttackedCoordinates, getGrids: () => gameboard.getGrids(),
+  };
 };
 
 export default Player;

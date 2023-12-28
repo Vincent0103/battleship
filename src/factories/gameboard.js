@@ -2,18 +2,18 @@ import Ship from './ship.js';
 
 const Gameboard = () => {
   const partnerShips = []; const opponentShips = [];
-  const grid = []; const opponentGrid = [];
+  const partnerGrid = []; const opponentGrid = [];
   const missedShotsCoordinates = [];
 
   const buildGrids = () => {
     for (let i = 0; i < 10; i += 1) {
-      [grid, opponentGrid].forEach((item) => item.push([]));
+      [partnerGrid, opponentGrid].forEach((item) => item.push([]));
       for (let j = 0; j < 10; j += 1) {
-        [grid, opponentGrid].forEach((item) => item[i].push({ shipId: null }));
+        [partnerGrid, opponentGrid].forEach((item) => item[i].push({ shipId: null }));
       }
     }
 
-    return { grid, opponentGrid };
+    return { partnerGrid, opponentGrid };
   };
 
   const getShipFromCell = (cell, ofPlayerId) => {
@@ -25,7 +25,7 @@ const Gameboard = () => {
   };
 
   const occupyCells = ({ getLength, getId }, [y, x], ofPlayerId, orientation) => {
-    const currentGrid = (ofPlayerId === 0) ? grid : opponentGrid;
+    const currentGrid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
     let currentCell;
     if (orientation === 'rightward') {
       for (let i = 0; i < getLength(); i += 1) {
@@ -45,7 +45,7 @@ const Gameboard = () => {
 
   const isCellAvailable = ([y, x], ofPlayerId, isPlaceable = true) => {
     let canBePlaced = isPlaceable;
-    const currentGrid = (ofPlayerId === 0) ? grid : opponentGrid;
+    const currentGrid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
     if (currentGrid[y] === undefined || currentGrid[y][x] === undefined) return false;
     if (currentGrid[y][x].shipId) canBePlaced = false;
     return canBePlaced;
@@ -100,7 +100,7 @@ const Gameboard = () => {
     const [y, x] = coordinates;
     const currentId = toPlayerId;
     const [currentGrid, getShipFromPlayerId] = (currentId === 0)
-      ? [opponentGrid, 1] : [grid, 0];
+      ? [opponentGrid, 1] : [partnerGrid, 0];
     if (currentGrid[y] === undefined || currentGrid[y][x] === undefined) return false;
     const currentCell = currentGrid[y][x];
 
@@ -120,7 +120,12 @@ const Gameboard = () => {
   const getMissedShotsCoordinates = () => missedShotsCoordinates;
 
   return {
-    buildGrids, placeShip, receiveAttack, getMissedShotsCoordinates, areAllShipsSunk,
+    buildGrids,
+    placeShip,
+    receiveAttack,
+    getMissedShotsCoordinates,
+    areAllShipsSunk,
+    getGrids: () => [partnerGrid, opponentGrid],
   };
 };
 
