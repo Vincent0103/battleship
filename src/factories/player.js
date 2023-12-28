@@ -1,5 +1,5 @@
 import Gameboard from './gameboard';
-import { containsSubArray } from './utilities';
+import { containsSubArray } from '../utilities';
 import Ship from './ship';
 
 const Player = () => {
