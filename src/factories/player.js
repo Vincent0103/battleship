@@ -8,17 +8,17 @@ const Player = () => {
   const player2 = { id: 1, turn: false, attackedCoordinates: [] };
   let gameMode;
 
-  const initializeDefaultShips = (gameboard) => {
-    gameboard.placeShip(Ship(5), [1, 5], player1.id);
-    gameboard.placeShip(Ship(5), [7, 4], player2.id);
-    gameboard.placeShip(Ship(4), [2, 1], player1.id, 'downward');
-    gameboard.placeShip(Ship(4), [5, 2], player2.id, 'downward');
-    gameboard.placeShip(Ship(3), [3, 3], player1.id);
-    gameboard.placeShip(Ship(3), [1, 8], player2.id, 'downward');
-    gameboard.placeShip(Ship(3), [6, 8], player1.id, 'downward');
-    gameboard.placeShip(Ship(3), [9, 4], player2.id);
-    gameboard.placeShip(Ship(2), [9, 2], player1.id);
-    gameboard.placeShip(Ship(2), [0, 0], player2.id, 'downward');
+  const initializeDefaultShips = (board) => {
+    board.placeShip(Ship(5), [1, 5], player1.id);
+    board.placeShip(Ship(5), [7, 4], player2.id);
+    board.placeShip(Ship(4), [2, 1], player1.id, 'downward');
+    board.placeShip(Ship(4), [5, 2], player2.id, 'downward');
+    board.placeShip(Ship(3), [3, 3], player1.id);
+    board.placeShip(Ship(3), [1, 8], player2.id, 'downward');
+    board.placeShip(Ship(3), [6, 8], player1.id, 'downward');
+    board.placeShip(Ship(3), [9, 4], player2.id);
+    board.placeShip(Ship(2), [9, 2], player1.id);
+    board.placeShip(Ship(2), [0, 0], player2.id, 'downward');
   };
 
   const getAttackedCoordinates = (ofPlayerId) => {
