@@ -17,7 +17,7 @@ const DOM = () => {
     opponentGridContainer = document.createElement('div');
     opponentGridContainer.classList.add('grid-container');
 
-    [partnerGridContainer, opponentGridContainer].forEach((gridContainer) => {
+    [partnerGridContainer, opponentGridContainer].forEach((gridContainer, index) => {
       for (let i = 0; i < 10; i += 1) {
         const line = document.createElement('div');
         line.classList.add('line');
@@ -25,6 +25,7 @@ const DOM = () => {
         for (let j = 0; j < 10; j += 1) {
           const square = document.createElement('div');
           square.classList.add('square');
+          if (index === 1) square.classList.add('opponent-square');
           square.setAttribute('data-square', j);
           line.appendChild(square);
         }

@@ -1,5 +1,3 @@
-import Ship from './ship.js';
-
 const Gameboard = () => {
   const partnerShips = []; const opponentShips = [];
   const partnerGrid = []; const opponentGrid = [];
