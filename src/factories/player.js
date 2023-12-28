@@ -1,6 +1,6 @@
-import Gameboard from './gameboard';
-import { containsSubArray } from '../utilities';
-import Ship from './ship';
+import Gameboard from './gameboard.js';
+import { containsSubArray } from '../utilities.js';
+import Ship from './ship.js';
 
 const Player = () => {
   let gameboard;

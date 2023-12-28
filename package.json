@@ -1,7 +1,7 @@
 {
   "name": "my_package",
   "version": "1.0.0",
-  "description": "TOP purposes",
+  "description": "This project is part of my journey through The Odin Project course, specifically focusing making a battleship game. The goal is to enhance my understanding of testing methodologies, including unit testing and test-driven development (TDD). It's also a conclusion to my javascript's course, showing off everything i learnt so far from this course.",
   "private": true,
   "type": "module",
   "scripts": {

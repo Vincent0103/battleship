@@ -1,4 +1,4 @@
-import incrementalId from '../utilities';
+import incrementalId from '../utilities.js';
 
 const Ship = (length, hitsCount = 0, id = incrementalId()) => {
   let hits = hitsCount;

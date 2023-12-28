@@ -1,9 +1,16 @@
-const path = require('path');
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
 
-module.exports = {
+// eslint-disable-next-line no-underscore-dangle
+const __filename = fileURLToPath(import.meta.url);
+// eslint-disable-next-line no-underscore-dangle
+const __dirname = dirname(__filename);
+
+export default {
   mode: 'development',
   entry: {
     index: './src/index.js',
+    DOM: './src/DOM.js',
     gameboard: './src/factories/gameboard.js',
     player: './src/factories/player.js',
     ship: './src/factories/ship.js',
