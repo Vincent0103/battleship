@@ -43,6 +43,7 @@ const DOM = (Player) => {
           cell.appendChild(missedImg);
           return { coordinates: [y, x] };
         }
+        return false;
       }
     } else {
       if (cell.getAttribute('data-has-ship') && !isExplosedImgAlready) {
@@ -53,6 +54,7 @@ const DOM = (Player) => {
         return { coordinates: [y, x] };
       }
     }
+    return false;
   };
 
   const listenOpponentGridCells = () => {
@@ -70,9 +72,13 @@ const DOM = (Player) => {
         square.addEventListener('click', (e) => {
           const grid = document.querySelector('.grid-container.partner');
           const playerAttack = handleSVGIntoCell(e.target, player1.id, 'click');
-          const [y, x] = player.attack(playerAttack.coordinates);
-          const partnerCell = grid.children[y].children[x];
-          handleSVGIntoCell(partnerCell, player2.id);
+          if (playerAttack) {
+            let y; let x;
+            const attackedCoordinates = player.attack(playerAttack.coordinates);
+            if (attackedCoordinates) [y, x] = attackedCoordinates;
+            const partnerCell = grid?.children[y]?.children[x];
+            if (partnerCell !== undefined) handleSVGIntoCell(partnerCell, player2.id);
+          }
         });
       }
     }
