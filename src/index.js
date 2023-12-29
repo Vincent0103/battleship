@@ -10,6 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const player = Player();
   player.startGame();
-  const [partnerGrid, opponentGrid] = player.getGrids();
+  const [partnerGrid] = player.getGrids();
   page.populateDOMGrid(partnerGrid, 0);
+  page.listenOpponentGridCells();
 });

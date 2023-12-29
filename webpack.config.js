@@ -35,7 +35,14 @@ export default {
       },
       {
         test: /\.svg$/i,
-        use: 'raw-loader',
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[hash].[ext]',
+            },
+          },
+        ],
       },
     ],
   },

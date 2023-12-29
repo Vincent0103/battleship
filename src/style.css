@@ -60,17 +60,20 @@ body {
   border: .5px solid black;
   width: 100%;
   height: 100%;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, .05);
 }
 
 .line .square.opponent-square {
   cursor: crosshair;
 }
-.line .square.opponent-square:hover {
-  background-color: gray;
-}
-
 .ship {
   background-color: #62148f;
   box-shadow: inset 0 0 5px rgba(0, 0, 0, .15) !important;
+}
+
+.circle-icon {
+  position: absolute;
+  height: 15px;
+  width: 15px;
+  top: 32%;
+  left: 32%;
 }
