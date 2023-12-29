@@ -16,7 +16,7 @@
   \*************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/noSourceMaps.js */ \"./node_modules/css-loader/dist/runtime/noSourceMaps.js\");\n/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ \"./node_modules/css-loader/dist/runtime/api.js\");\n/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);\n// Imports\n\n\nvar ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, `* {\n  --border-bgc: #3f294c;\n}\n\nbody {\n  width: 100dvw;\n  height: 100dvh;\n  margin: 0;\n  padding: 0;\n  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\n  background-color: #eaf4fc;\n}\n\n.page-container {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 5dvw;\n}\n.grid-container {\n  height: 70dvh;\n  width: 70dvh;\n  background-color: white;\n  border: 5px solid var(--border-bgc);\n  border-radius: 1%;\n  box-shadow: 0 0 5px rgba(0, 0, 0, .15);\n  display: grid;\n  grid-template-rows: repeat(10, 1fr);\n}\n\n@media (max-width: 600px) {\n  .body {\n    margin: 10px;\n    height: auto;\n    width: auto;\n  }\n\n  .page-container {\n    flex-direction: column;\n  }\n\n  .grid-container {\n    height: 80dvw;\n    width: 80dvw;\n  }\n\n  .line .square {\n    width: 200px;\n    height: 20px;\n  }\n}\n\n.grid-container .line {\n  display: flex;\n}\n\n.line .square {\n  border: .5px solid black;\n  width: 100%;\n  height: 100%;\n  box-shadow: inset 0 0 5px rgba(0, 0, 0, .05);\n}\n\n.line .square.opponent-square {\n  cursor: crosshair;\n}\n.line .square.opponent-square:hover {\n  background-color: gray;\n}\n\n.ship {\n  background-color: #62148f;\n  box-shadow: inset 0 0 5px rgba(0, 0, 0, .15) !important;\n}`, \"\"]);\n// Exports\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);\n\n\n//# sourceURL=webpack://my_package/./src/style.css?./node_modules/css-loader/dist/cjs.js");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/noSourceMaps.js */ \"./node_modules/css-loader/dist/runtime/noSourceMaps.js\");\n/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ \"./node_modules/css-loader/dist/runtime/api.js\");\n/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);\n// Imports\n\n\nvar ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, `* {\n  --border-bgc: #3f294c;\n}\n\nbody {\n  width: 100dvw;\n  height: 100dvh;\n  margin: 0;\n  padding: 0;\n  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\n  background-color: #eaf4fc;\n}\n\n.page-container {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 5dvw;\n}\n.grid-container {\n  height: 70dvh;\n  width: 70dvh;\n  background-color: white;\n  border: 5px solid var(--border-bgc);\n  border-radius: 1%;\n  box-shadow: 0 0 5px rgba(0, 0, 0, .15);\n  display: grid;\n  grid-template-rows: repeat(10, 1fr);\n}\n\n@media (max-width: 600px) {\n  .body {\n    margin: 10px;\n    height: auto;\n    width: auto;\n  }\n\n  .page-container {\n    flex-direction: column;\n  }\n\n  .grid-container {\n    height: 80dvw;\n    width: 80dvw;\n  }\n\n  .line .square {\n    width: 200px;\n    height: 20px;\n  }\n}\n\n.grid-container .line {\n  display: flex;\n}\n\n.line .square {\n  border: .5px solid black;\n  width: 100%;\n  height: 100%;\n}\n\n.line .square.opponent-square {\n  cursor: crosshair;\n}\n.ship {\n  background-color: #62148f;\n  box-shadow: inset 0 0 5px rgba(0, 0, 0, .15) !important;\n}\n\n.circle-icon {\n  position: absolute;\n  height: 15px;\n  width: 15px;\n  top: 32%;\n  left: 32%;\n}`, \"\"]);\n// Exports\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);\n\n\n//# sourceURL=webpack://my_package/./src/style.css?./node_modules/css-loader/dist/cjs.js");
 
 /***/ }),
 
@@ -37,6 +37,16 @@ eval("\n\n/*\n  MIT License http://www.opensource.org/licenses/mit-license.php\n
 /***/ ((module) => {
 
 eval("\n\nmodule.exports = function (i) {\n  return i[1];\n};\n\n//# sourceURL=webpack://my_package/./node_modules/css-loader/dist/runtime/noSourceMaps.js?");
+
+/***/ }),
+
+/***/ "./src/components/circle.svg":
+/*!***********************************!*\
+  !*** ./src/components/circle.svg ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + \"circle.4ca7cf1ceafcaf6bc2b75cb35a6b3569.svg\");\n\n//# sourceURL=webpack://my_package/./src/components/circle.svg?");
 
 /***/ }),
 
@@ -116,7 +126,7 @@ eval("\n\n/* istanbul ignore next  */\nfunction styleTagTransform(css, styleElem
   \********************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nconst DOM = () => {\n  let partnerGridContainer;\n  let opponentGridContainer;\n\n  const populateDOMGrid = (gameboard, ofPlayerId) => {\n    gameboard.forEach((line, y) => line.forEach((square, x) => {\n      if (Number.isInteger(square.shipId)) {\n        if (ofPlayerId === 0) partnerGridContainer.children[y].children[x].classList.add('ship');\n        else opponentGridContainer.children[y].children[x].classList.add('ship');\n      }\n    }));\n  };\n\n  const buildDOMGrids = () => {\n    partnerGridContainer = document.createElement('div');\n    partnerGridContainer.classList.add('grid-container');\n    opponentGridContainer = document.createElement('div');\n    opponentGridContainer.classList.add('grid-container');\n\n    [partnerGridContainer, opponentGridContainer].forEach((gridContainer, index) => {\n      for (let i = 0; i < 10; i += 1) {\n        const line = document.createElement('div');\n        line.classList.add('line');\n        line.setAttribute('data-line', i);\n        for (let j = 0; j < 10; j += 1) {\n          const square = document.createElement('div');\n          square.classList.add('square');\n          if (index === 1) square.classList.add('opponent-square');\n          square.setAttribute('data-square', j);\n          line.appendChild(square);\n        }\n        gridContainer.appendChild(line);\n      }\n    });\n\n    return [partnerGridContainer, opponentGridContainer];\n  };\n\n  const addContent = () => buildDOMGrids();\n\n  return { addContent, populateDOMGrid };\n};\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DOM);\n\n\n//# sourceURL=webpack://my_package/./src/DOM.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _components_circle_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/circle.svg */ \"./src/components/circle.svg\");\n\n\nconst DOM = () => {\n  let partnerGridContainer;\n  let opponentGridContainer;\n\n  const handleSVGIntoCell = (targetCell, event) => {\n    const cell = targetCell;\n    if (event === 'mouseenter') {\n      cell.style.position = 'relative';\n      const img = document.createElement('img');\n      img.src = _components_circle_svg__WEBPACK_IMPORTED_MODULE_0__[\"default\"];\n      img.alt = 'target cell icon';\n      img.classList.add('circle-icon');\n      cell.appendChild(img);\n    } else {\n      cell.style.position = '';\n      const img = cell.querySelector('img');\n      cell.removeChild(img);\n    }\n  };\n\n  const listenOpponentGridCells = () => {\n    for (let i = 0; i < 10; i += 1) {\n      const line = opponentGridContainer.children[i];\n      for (let j = 0; j < 10; j += 1) {\n        const square = line.children[j];\n        square.addEventListener('mouseenter', (e) => {\n          handleSVGIntoCell(e.target, 'mouseenter');\n        });\n        square.addEventListener('mouseleave', (e) => {\n          handleSVGIntoCell(e.target, 'mouseleave');\n        });\n      }\n    }\n  };\n\n  const populateDOMGrid = (gameboard, ofPlayerId) => {\n    gameboard.forEach((line, y) => line.forEach((square, x) => {\n      if (Number.isInteger(square.shipId)) {\n        if (ofPlayerId === 0) partnerGridContainer.children[y].children[x].classList.add('ship');\n        else opponentGridContainer.children[y].children[x].classList.add('ship');\n      }\n    }));\n  };\n\n  const buildDOMGrids = () => {\n    partnerGridContainer = document.createElement('div');\n    partnerGridContainer.classList.add('grid-container');\n    opponentGridContainer = document.createElement('div');\n    opponentGridContainer.classList.add('grid-container');\n\n    [partnerGridContainer, opponentGridContainer].forEach((gridContainer, index) => {\n      for (let i = 0; i < 10; i += 1) {\n        const line = document.createElement('div');\n        line.classList.add('line');\n        line.setAttribute('data-line', i);\n        for (let j = 0; j < 10; j += 1) {\n          const square = document.createElement('div');\n          square.classList.add('square');\n          if (index === 1) square.classList.add('opponent-square');\n          square.setAttribute('data-square', j);\n          line.appendChild(square);\n        }\n        gridContainer.appendChild(line);\n      }\n    });\n\n    return [partnerGridContainer, opponentGridContainer];\n  };\n\n  const addContent = () => buildDOMGrids();\n\n  return { addContent, populateDOMGrid, listenOpponentGridCells };\n};\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DOM);\n\n\n//# sourceURL=webpack://my_package/./src/DOM.js?");
 
 /***/ }),
 
@@ -156,7 +166,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
   \**********************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ \"./src/style.css\");\n/* harmony import */ var _DOM_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DOM.js */ \"./src/DOM.js\");\n/* harmony import */ var _factories_player_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./factories/player.js */ \"./src/factories/player.js\");\n\n\n\n\nwindow.addEventListener('DOMContentLoaded', () => {\n  const page = (0,_DOM_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"])();\n  const pageContainer = document.querySelector('.page-container');\n  const gridContainers = page.addContent();\n  gridContainers.forEach((gridContainer) => pageContainer.appendChild(gridContainer));\n\n  const player = (0,_factories_player_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"])();\n  player.startGame();\n  const [partnerGrid, opponentGrid] = player.getGrids();\n  page.populateDOMGrid(partnerGrid, 0);\n});\n\n\n//# sourceURL=webpack://my_package/./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ \"./src/style.css\");\n/* harmony import */ var _DOM_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DOM.js */ \"./src/DOM.js\");\n/* harmony import */ var _factories_player_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./factories/player.js */ \"./src/factories/player.js\");\n\n\n\n\nwindow.addEventListener('DOMContentLoaded', () => {\n  const page = (0,_DOM_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"])();\n  const pageContainer = document.querySelector('.page-container');\n  const gridContainers = page.addContent();\n  gridContainers.forEach((gridContainer) => pageContainer.appendChild(gridContainer));\n\n  const player = (0,_factories_player_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"])();\n  player.startGame();\n  const [partnerGrid] = player.getGrids();\n  page.populateDOMGrid(partnerGrid, 0);\n  page.listenOpponentGridCells();\n});\n\n\n//# sourceURL=webpack://my_package/./src/index.js?");
 
 /***/ }),
 
@@ -221,6 +231,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
@@ -235,6 +257,29 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		var scriptUrl;
+/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
+/******/ 		var document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document) {
+/******/ 			if (document.currentScript)
+/******/ 				scriptUrl = document.currentScript.src;
+/******/ 			if (!scriptUrl) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				if(scripts.length) {
+/******/ 					var i = scripts.length - 1;
+/******/ 					while (i > -1 && !scriptUrl) scriptUrl = scripts[i--].src;
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
+/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
+/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
+/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
+/******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/nonce */
