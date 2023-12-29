@@ -1,4 +1,6 @@
 import CircleIcon from './components/circle.svg';
+import MissedIcon from './components/missed.svg';
+import ExplosionIcon from './components/bomb-explosion.svg';
 
 const DOM = () => {
   let partnerGridContainer;
@@ -6,17 +8,28 @@ const DOM = () => {
 
   const handleSVGIntoCell = (targetCell, event) => {
     const cell = targetCell;
+    const circleImg = document.createElement('img');
+    circleImg.src = CircleIcon;
+    circleImg.alt = 'target cell icon';
+    circleImg.classList.add('circle-icon');
+
+    const missedImg = document.createElement('img');
+    missedImg.src = MissedIcon;
+    missedImg.alt = 'missed cell icon';
+    missedImg.classList.add('missed-icon');
+
     if (event === 'mouseenter') {
-      cell.style.position = 'relative';
-      const img = document.createElement('img');
-      img.src = CircleIcon;
-      img.alt = 'target cell icon';
-      img.classList.add('circle-icon');
-      cell.appendChild(img);
-    } else {
-      cell.style.position = '';
-      const img = cell.querySelector('img');
-      cell.removeChild(img);
+      cell.appendChild(circleImg);
+    } else if (event === 'mouseleave') {
+      const img = cell.querySelector('img.circle-icon');
+      if (img) cell.removeChild(img);
+    } else if (event === 'click') {
+      const img = cell.querySelector('img.circle-icon');
+      const isMissedImgAlready = cell.querySelector('img.missed-icon');
+      if (img && !isMissedImgAlready) {
+        cell.removeChild(img);
+        cell.appendChild(missedImg);
+      }
     }
   };
 
@@ -30,6 +43,9 @@ const DOM = () => {
         });
         square.addEventListener('mouseleave', (e) => {
           handleSVGIntoCell(e.target, 'mouseleave');
+        });
+        square.addEventListener('click', (e) => {
+          handleSVGIntoCell(e.target, 'click');
         });
       }
     }
