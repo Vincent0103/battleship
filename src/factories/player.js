@@ -57,10 +57,9 @@ const Player = () => {
     && !containsSubArray(player2.attackedCoordinates, currentCoordinates)) {
       player2.attackedCoordinates.push(currentCoordinates);
       changeTurn();
-      return true;
+      return currentCoordinates;
     }
-    attackAI();
-    return false;
+    return attackAI();
   };
 
   const attack = (coordinates) => {
@@ -70,8 +69,7 @@ const Player = () => {
       && !containsSubArray(currentPlayer.attackedCoordinates, coordinates)) {
         currentPlayer.attackedCoordinates.push(coordinates);
         changeTurn();
-        if (gameMode === 'computer') attackAI();
-        return true;
+        if (gameMode === 'computer') return attackAI();
       }
       return false;
     }
