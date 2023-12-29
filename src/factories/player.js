@@ -8,6 +8,16 @@ const Player = () => {
   const player2 = { id: 1, turn: false, attackedCoordinates: [] };
   let gameMode;
 
+  const getRandomCoordinates = () => [Math.round(Math.random() * 9), Math.round(Math.random() * 9)];
+
+  const getValidAIRandomCoordinates = () => {
+    const currentCoordinates = getRandomCoordinates();
+    if (containsSubArray(player2.attackedCoordinates, currentCoordinates)) {
+      return getValidAIRandomCoordinates(player2);
+    }
+    return currentCoordinates;
+  };
+
   const initializeDefaultShips = (board) => {
     board.placeShip(Ship(5), [1, 5], player1.id);
     board.placeShip(Ship(5), [7, 4], player2.id);
@@ -21,22 +31,6 @@ const Player = () => {
     board.placeShip(Ship(2), [0, 0], player2.id, 'downward');
   };
 
-  const getAttackedCoordinates = (ofPlayerId) => {
-    if (ofPlayerId === 0) return player1.attackedCoordinates;
-    if (ofPlayerId === 1) return player2.attackedCoordinates;
-    return [player1.attackedCoordinates, player2.attackedCoordinates];
-  };
-
-  const getRandomCoordinates = () => [Math.round(Math.random() * 9), Math.round(Math.random() * 9)];
-
-  const getValidAICoordinates = () => {
-    const currentCoordinates = getRandomCoordinates();
-    if (containsSubArray(player2.attackedCoordinates, currentCoordinates)) {
-      return getValidAICoordinates();
-    }
-    return currentCoordinates;
-  };
-
   const changeTurn = () => {
     if (!player2.turn) {
       player1.turn = false;
@@ -48,7 +42,7 @@ const Player = () => {
   };
 
   const attackAI = () => {
-    const currentCoordinates = getValidAICoordinates();
+    const currentCoordinates = getValidAIRandomCoordinates(player2);
     if (gameboard.receiveAttack(currentCoordinates, player2.id)
     && !containsSubArray(player2.attackedCoordinates, currentCoordinates)) {
       player2.attackedCoordinates.push(currentCoordinates);
@@ -82,7 +76,10 @@ const Player = () => {
   };
 
   return {
-    startGame, attack, getAttackedCoordinates, getGrids: () => gameboard.getGrids(),
+    startGame,
+    attack,
+    getGrids: () => gameboard.getGrids(),
+    getPlayers: () => [player1, player2],
   };
 };
 

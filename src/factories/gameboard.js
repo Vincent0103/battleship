@@ -41,42 +41,54 @@ const Gameboard = () => {
     return currentGrid;
   };
 
-  const isCellAvailable = ([y, x], ofPlayerId, isPlaceable = true) => {
-    let canBePlaced = isPlaceable;
-    const currentGrid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
-    if (currentGrid[y] === undefined || currentGrid[y][x] === undefined) return false;
-    if (currentGrid[y][x].shipId) canBePlaced = false;
-    return canBePlaced;
-  };
+  const offsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
 
-  const isPlaceableSynchoronously = (length, [y, x], ofPlayerId, orientation, isPlaceable) => {
-    let canBePlaced = isPlaceable;
+  const hasShipId = (grid, y, x) => (y <= 9 && y >= 0 && x <= 9 && x >= 0)
+    && Number.isInteger(grid[y][x].shipId);
+
+  const isCellAvailable = (
+    [y, x],
+    ofPlayerId,
+    orientation,
+    isBackShip = false,
+    isFrontShip = false,
+  ) => {
+    const currentGrid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
+    let currentOffsets;
+    if (x > 9 || x < 0 || y > 9 || y < 0) return false;
+
     if (orientation === 'rightward') {
-      for (let i = 0; i < length; i += 1) {
-        canBePlaced = isCellAvailable([y, x + i], ofPlayerId, isPlaceable);
-      }
-    } else {
-      for (let j = 0; j < length; j += 1) {
-        canBePlaced = isCellAvailable([y + j, x], ofPlayerId, isPlaceable);
+      currentOffsets = [offsets[0], offsets[1], offsets[2], offsets[5], offsets[6], offsets[7]];
+      if (currentOffsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx))
+      || (isBackShip && hasShipId(currentGrid, y, x - 1))
+      || (isFrontShip && hasShipId(currentGrid, y, x + 1))) {
+        return false;
       }
     }
-
-    return canBePlaced;
+    if (orientation === 'downward') {
+      currentOffsets = [offsets[0], offsets[2], offsets[3], offsets[4], offsets[5], offsets[7]];
+      if (currentOffsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx))
+      || (isBackShip && hasShipId(currentGrid, y - 1, x))
+      || (isFrontShip && hasShipId(currentGrid, y + 1, x))) {
+        return false;
+      }
+    }
+    return true;
   };
 
-  const areCellsAvailable = (length, coordinates, ofPlayerId, orientation) => {
-    let isPlaceable = true;
-
-    // the for loop acts asynchoronously so we had to seperate it into it's own function
-    // in order to make it synchoronous
-    isPlaceable = isPlaceableSynchoronously(
-      length,
-      coordinates,
-      ofPlayerId,
-      orientation,
-      isPlaceable,
-    );
-    return isPlaceable;
+  const areCellsAvailable = (length, [y, x], ofPlayerId, orientation) => {
+    for (let i = 0; i < length; i += 1) {
+      const currentCoordinates = (orientation === 'rightward') ? [y, x + i] : [y + i, x];
+      if (i === 0 && !isCellAvailable(currentCoordinates, ofPlayerId, orientation, true, false)) {
+        return false;
+      }
+      if (i === length - 1
+          && !isCellAvailable(currentCoordinates, ofPlayerId, orientation, false, true)) {
+        return false;
+      }
+      if (!isCellAvailable(currentCoordinates, ofPlayerId, orientation)) return false;
+    }
+    return true;
   };
 
   const placeShip = (ship, coordinates, ofPlayerId = 0, orientation = 'rightward') => {
