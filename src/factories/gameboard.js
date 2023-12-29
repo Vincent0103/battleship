@@ -59,19 +59,15 @@ const Gameboard = () => {
 
     if (orientation === 'rightward') {
       currentOffsets = [offsets[0], offsets[1], offsets[2], offsets[5], offsets[6], offsets[7]];
-      if (currentOffsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx))
+      return !(currentOffsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx))
       || (isBackShip && hasShipId(currentGrid, y, x - 1))
-      || (isFrontShip && hasShipId(currentGrid, y, x + 1))) {
-        return false;
-      }
+      || (isFrontShip && hasShipId(currentGrid, y, x + 1)));
     }
     if (orientation === 'downward') {
       currentOffsets = [offsets[0], offsets[2], offsets[3], offsets[4], offsets[5], offsets[7]];
-      if (currentOffsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx))
+      return !(currentOffsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx))
       || (isBackShip && hasShipId(currentGrid, y - 1, x))
-      || (isFrontShip && hasShipId(currentGrid, y + 1, x))) {
-        return false;
-      }
+      || (isFrontShip && hasShipId(currentGrid, y + 1, x)));
     }
     return true;
   };
