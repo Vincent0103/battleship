@@ -19,16 +19,26 @@ const Player = () => {
   };
 
   const initializeDefaultShips = (board) => {
-    board.placeShip(Ship(5), [1, 5], player1.id);
-    board.placeShip(Ship(5), [7, 4], player2.id);
-    board.placeShip(Ship(4), [2, 1], player1.id, 'downward');
-    board.placeShip(Ship(4), [5, 2], player2.id, 'downward');
-    board.placeShip(Ship(3), [3, 3], player1.id);
-    board.placeShip(Ship(3), [1, 8], player2.id, 'downward');
-    board.placeShip(Ship(3), [6, 8], player1.id, 'downward');
-    board.placeShip(Ship(3), [9, 4], player2.id);
-    board.placeShip(Ship(2), [9, 2], player1.id);
-    board.placeShip(Ship(2), [0, 0], player2.id, 'downward');
+    const shipLengths = [5, 5, 4, 4, 3, 3, 3, 3, 2, 2];
+    for (let i = 0; i < 10; i += 1) {
+      const currentPlayer = (i % 2 === 0) ? player1 : player2;
+      const getRandomOrientation = Math.round(Math.random());
+      const orientation = (getRandomOrientation === 0) ? 'rightward' : 'downward';
+      let isPlaceable = board.placeShip(
+        Ship(shipLengths[i]),
+        getRandomCoordinates(),
+        currentPlayer.id,
+        orientation,
+      );
+      while (!isPlaceable) {
+        isPlaceable = board.placeShip(
+          Ship(shipLengths[i]),
+          getRandomCoordinates(),
+          currentPlayer.id,
+          orientation,
+        );
+      }
+    }
   };
 
   const changeTurn = () => {
