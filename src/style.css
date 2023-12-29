@@ -85,5 +85,12 @@ body {
   width: 15px;
   top: 32%;
   left: 32%;
+}
 
+.explosion-icon {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  top: 15%;
+  left: 15%;
 }

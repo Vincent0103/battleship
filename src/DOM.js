@@ -17,17 +17,23 @@ const DOM = () => {
     missedImg.src = MissedIcon;
     missedImg.alt = 'missed cell icon';
     missedImg.classList.add('missed-icon');
+    const isMissedImgAlready = cell.querySelector('img.missed-icon');
+
+    const explosionImg = document.createElement('img');
+    explosionImg.src = ExplosionIcon;
+    explosionImg.alt = 'explosed cell icon';
+    explosionImg.classList.add('explosion-icon');
+    const isExplosedImgAlready = cell.querySelector('img.explosion-icon');
 
     if (event === 'mouseenter') {
-      cell.appendChild(circleImg);
+      if (!isMissedImgAlready && !isExplosedImgAlready) cell.appendChild(circleImg);
     } else if (event === 'mouseleave') {
       const img = cell.querySelector('img.circle-icon');
       if (img) cell.removeChild(img);
     } else if (event === 'click') {
-      const img = cell.querySelector('img.circle-icon');
-      const isMissedImgAlready = cell.querySelector('img.missed-icon');
-      if (img && !isMissedImgAlready) {
-        cell.removeChild(img);
+      if (cell.getAttribute('data-has-ship') && !isExplosedImgAlready) {
+        cell.appendChild(explosionImg);
+      } else if (!isMissedImgAlready && !isExplosedImgAlready) {
         cell.appendChild(missedImg);
       }
     }
@@ -55,7 +61,7 @@ const DOM = () => {
     gameboard.forEach((line, y) => line.forEach((square, x) => {
       if (Number.isInteger(square.shipId)) {
         if (ofPlayerId === 0) partnerGridContainer.children[y].children[x].classList.add('ship');
-        else opponentGridContainer.children[y].children[x].classList.add('ship');
+        else opponentGridContainer.children[y].children[x].setAttribute('data-has-ship', 'true');
       }
     }));
   };
