@@ -81,11 +81,13 @@ const DOM = (Player) => {
               const attackedCoordinates = await player.attack(playerMarkInGrid.coordinates);
               console.log(attackedCoordinates);
               if (Array.isArray(await attackedCoordinates)) [y, x] = attackedCoordinates;
+              if (!attackedCoordinates) clickable = true;
               const partnerCell = grid?.children[await y]?.children[await x];
               if (partnerCell !== undefined) {
                 handleSVGIntoCell(partnerCell, player2.id);
                 clickable = true;
               }
+              if (attackedCoordinates === 'game ended') clickable = false;
             }
           }
         }));

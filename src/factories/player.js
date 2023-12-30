@@ -51,6 +51,8 @@ const Player = () => {
     }
   };
 
+  const getRandomAiThinkingTime = () => Math.random() * 2800 + 200;
+
   const attackAI = () => {
     const currentCoordinates = getValidAIRandomCoordinates(player2);
     if (gameboard.receiveAttack(currentCoordinates, player2.id)
@@ -58,7 +60,7 @@ const Player = () => {
       player2.attackedCoordinates.push(currentCoordinates);
       changeTurn();
       return new Promise((resolve) => {
-        setTimeout(() => resolve(currentCoordinates), 1000);
+        setTimeout(() => resolve(currentCoordinates), getRandomAiThinkingTime());
       });
     } if (gameboard.receiveAttack(currentCoordinates, player2.id) === 'game ended') {
       return 'game ended';
