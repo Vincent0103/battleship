@@ -75,7 +75,7 @@ const DOM = (Player) => {
           if (playerAttack) {
             let y; let x;
             const attackedCoordinates = player.attack(playerAttack.coordinates);
-            if (attackedCoordinates) [y, x] = attackedCoordinates;
+            if (Array.isArray(attackedCoordinates)) [y, x] = attackedCoordinates;
             const partnerCell = grid?.children[y]?.children[x];
             if (partnerCell !== undefined) handleSVGIntoCell(partnerCell, player2.id);
           }

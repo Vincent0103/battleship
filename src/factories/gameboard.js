@@ -102,7 +102,7 @@ const Gameboard = () => {
   };
 
   const receiveAttack = (coordinates, toPlayerId) => {
-    if (areAllShipsSunk(0) || areAllShipsSunk(1)) return false;
+    if (areAllShipsSunk(0) || areAllShipsSunk(1)) return 'game ended';
     const [y, x] = coordinates;
     const currentId = toPlayerId;
     const [currentGrid, getShipFromPlayerId] = (currentId === 0)

@@ -14,6 +14,7 @@ export default {
     gameboard: './src/factories/gameboard.js',
     player: './src/factories/player.js',
     ship: './src/factories/ship.js',
+    utilities: './src/utilities.js',
   },
   output: {
     filename: '[name].bundle.js',

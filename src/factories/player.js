@@ -58,6 +58,8 @@ const Player = () => {
       player2.attackedCoordinates.push(currentCoordinates);
       changeTurn();
       return currentCoordinates;
+    } if (gameboard.receiveAttack(currentCoordinates, player2.id) === 'game ended') {
+      return 'game ended';
     }
     return attackAI();
   };
