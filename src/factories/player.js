@@ -57,7 +57,9 @@ const Player = () => {
     && !containsSubArray(player2.attackedCoordinates, currentCoordinates)) {
       player2.attackedCoordinates.push(currentCoordinates);
       changeTurn();
-      return currentCoordinates;
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(currentCoordinates), 1000);
+      });
     } if (gameboard.receiveAttack(currentCoordinates, player2.id) === 'game ended') {
       return 'game ended';
     }
@@ -75,7 +77,7 @@ const Player = () => {
       }
       return false;
     }
-    return false;
+    return 'game ended';
   };
 
   const startGame = (mode = 'computer') => {

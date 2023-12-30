@@ -123,14 +123,12 @@ const Gameboard = () => {
     return missedShotCoordinates;
   };
 
-  const getMissedShotsCoordinates = () => missedShotsCoordinates;
-
   return {
     buildGrids,
     placeShip,
     receiveAttack,
-    getMissedShotsCoordinates,
     areAllShipsSunk,
+    getMissedShotsCoordinates: () => missedShotsCoordinates,
     getGrids: () => [partnerGrid, opponentGrid],
   };
 };

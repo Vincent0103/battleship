@@ -58,6 +58,8 @@ const DOM = (Player) => {
   };
 
   const listenOpponentGridCells = () => {
+    const grid = document.querySelector('.grid-container.partner');
+    let clickable = true;
     const [player1, player2] = player.getPlayers();
     for (let i = 0; i < 10; i += 1) {
       const line = opponentGridContainer.children[i];
@@ -69,17 +71,24 @@ const DOM = (Player) => {
         square.addEventListener('mouseleave', (e) => {
           handleSVGIntoCell(e.target, player1.id, 'mouseleave');
         });
-        square.addEventListener('click', (e) => {
-          const grid = document.querySelector('.grid-container.partner');
-          const playerAttack = handleSVGIntoCell(e.target, player1.id, 'click');
-          if (playerAttack) {
-            let y; let x;
-            const attackedCoordinates = player.attack(playerAttack.coordinates);
-            if (Array.isArray(attackedCoordinates)) [y, x] = attackedCoordinates;
-            const partnerCell = grid?.children[y]?.children[x];
-            if (partnerCell !== undefined) handleSVGIntoCell(partnerCell, player2.id);
+        // eslint-disable-next-line no-loop-func
+        square.addEventListener('click', (async (e) => {
+          if (clickable) {
+            const playerMarkInGrid = handleSVGIntoCell(e.target, player1.id, 'click');
+            if (playerMarkInGrid && clickable) {
+              clickable = false;
+              let y; let x;
+              const attackedCoordinates = await player.attack(playerMarkInGrid.coordinates);
+              console.log(attackedCoordinates);
+              if (Array.isArray(await attackedCoordinates)) [y, x] = attackedCoordinates;
+              const partnerCell = grid?.children[await y]?.children[await x];
+              if (partnerCell !== undefined) {
+                handleSVGIntoCell(partnerCell, player2.id);
+                clickable = true;
+              }
+            }
           }
-        });
+        }));
       }
     }
   };
