@@ -65,11 +65,13 @@ const DOM = (Player) => {
       let y; let x;
       const attackedCoordinates = await player.attack(playerMarkInGrid.coordinates);
       if (Array.isArray(await attackedCoordinates)) [y, x] = attackedCoordinates;
+      if (!attackedCoordinates) hasClicked = true;
       const partnerCell = grid?.children[await y]?.children[await x];
       if (partnerCell !== undefined) {
         handleSVGIntoCell(partnerCell, player2.id);
         hasClicked = true;
       }
+      if (attackedCoordinates === 'game ended') hasClicked = false;
     }
     return hasClicked;
   };
