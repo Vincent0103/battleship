@@ -60,6 +60,10 @@ body {
   box-shadow: 0px 0px 30px rgba(0, 0, 0, .3);
 }
 
+.grid-container.partner {
+  cursor: default;
+}
+
 
 @media (max-width: 600px) {
   .body {
@@ -98,10 +102,6 @@ body {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-}
-
-.line .square.opponent-square {
-  /* cursor: crosshair; */
 }
 
 .line .square.top {
