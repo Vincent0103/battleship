@@ -59,7 +59,15 @@ const DOM = (Player) => {
     return false;
   };
 
-  const changeTurnIndicator = () => {
+  const changeTurnIndicator = (isGameEnded = false) => {
+    if (isGameEnded) {
+      if (partnerGridContainer.classList.contains('not-turn')) {
+        turnIndicator.textContent = 'PLAYER 1 WINS';
+      } else turnIndicator.textContent = 'PLAYER 2 WINS';
+      partnerGridContainer.classList.add('not-turn');
+      opponentGridContainer.classList.add('not-turn');
+      return 'game ended';
+    }
     if (turnIndicator.classList.contains('player1')) {
       turnIndicator.classList.remove('player1');
       turnIndicator.classList.add('player2');
@@ -116,7 +124,10 @@ const DOM = (Player) => {
                 changeTurnIndicator();
                 clickable = true;
               }
-              if (attackedCoordinates === 'game ended') clickable = false;
+              if (attackedCoordinates === 'game ended') {
+                changeTurnIndicator(true);
+                clickable = false;
+              }
             }
           }
         }));
