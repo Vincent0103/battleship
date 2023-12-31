@@ -32,7 +32,8 @@ const DOM = (Player) => {
 
     if (fromPlayerId === 0) {
       if (event === 'mouseenter') {
-        if (!isMissedImgAlready && !isExplosedImgAlready) cell.appendChild(circleImg);
+        if (!isMissedImgAlready && !isExplosedImgAlready
+          && turnIndicator.textContent === 'YOUR TURN') cell.appendChild(circleImg);
       } else if (event === 'mouseleave') {
         const img = cell.querySelector('img.circle-icon');
         if (img) cell.removeChild(img);

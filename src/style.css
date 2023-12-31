@@ -41,12 +41,15 @@ body {
   border: 1rem solid var(--border-bgc);
   border-radius: 10%;
   box-shadow: 0px 0px 30px rgba(0, 0, 0, .15);
+  filter: brightness(80%);
   display: grid;
   grid-template-rows: repeat(10, 1fr);
   transition: all 0.5s;
 }
 
 .grid-container.not-turn {
+  filter: none;
+  cursor: crosshair;
   height: 60dvh;
   width: 60dvh;
   box-shadow: 0px 0px 30px rgba(0, 0, 0, .3);
@@ -88,7 +91,7 @@ body {
 }
 
 .line .square.opponent-square {
-  cursor: crosshair;
+  /* cursor: crosshair; */
 }
 
 .line .square.top {
