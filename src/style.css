@@ -34,6 +34,7 @@ body {
 }
 
 .grid-container {
+  position: relative;
   height: 50dvh;
   width: 50dvh;
   background-color: white;
@@ -43,10 +44,6 @@ body {
   display: grid;
   grid-template-rows: repeat(10, 1fr);
   transition: all 0.5s;
-}
-
-.grid-container-border {
-  position: absolute;
 }
 
 .grid-container.not-turn {
@@ -93,6 +90,23 @@ body {
 .line .square.opponent-square {
   cursor: crosshair;
 }
+
+.line .square.top {
+  border-top: none;
+}
+
+.line .square.bottom {
+  border-bottom: none;
+}
+
+.line .square.left {
+  border-left: none;
+}
+
+.line .square.right {
+  border-right: none;
+}
+
 .ship {
   background-color: #af69ef;
   box-shadow: 0px 0px 30px rgba(0, 0, 0, .15);
@@ -100,24 +114,24 @@ body {
 
 .circle-icon {
   position: absolute;
-  height: 15px;
-  width: 15px;
-  top: 32%;
-  left: 32%;
+  height: 10px;
+  width: 10px;
+  top: 33%;
+  left: 33%;
 }
 
 .missed-icon {
   position: absolute;
-  height: 15px;
-  width: 15px;
-  top: 32%;
-  left: 32%;
+  height: 10px;
+  width: 10px;
+  top: 33%;
+  left: 33%;
 }
 
 .explosion-icon {
   position: absolute;
-  height: 30px;
-  width: 30px;
-  top: 15%;
-  left: 15%;
+  height: 20px;
+  width: 20px;
+  top: 12%;
+  left: 12%;
 }

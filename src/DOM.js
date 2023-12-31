@@ -6,6 +6,7 @@ const DOM = (Player) => {
   const player = Player;
   let partnerGridContainer;
   let opponentGridContainer;
+  let turnIndicator;
 
   const handleSVGIntoCell = (targetCell, fromPlayerId, event = false) => {
     const cell = targetCell;
@@ -57,6 +58,30 @@ const DOM = (Player) => {
     return false;
   };
 
+  const changeTurnIndicator = () => {
+    if (turnIndicator.classList.contains('player1')) {
+      turnIndicator.classList.remove('player1');
+      turnIndicator.classList.add('player2');
+      turnIndicator.textContent = 'OPPONENT TURN';
+      partnerGridContainer.classList.add('not-turn');
+      opponentGridContainer.classList.remove('not-turn');
+    } else {
+      turnIndicator.classList.remove('player2');
+      turnIndicator.classList.add('player1');
+      turnIndicator.textContent = 'YOUR TURN';
+      opponentGridContainer.classList.add('not-turn');
+      partnerGridContainer.classList.remove('not-turn');
+    }
+  };
+
+  const addTurnIndicator = () => {
+    turnIndicator = document.createElement('div');
+    turnIndicator.classList.add('turn-indicator');
+    turnIndicator.classList.add('player1');
+    turnIndicator.textContent = 'YOUR TURN';
+    return turnIndicator;
+  };
+
   const listenOpponentGridCells = () => {
     const grid = document.querySelector('.grid-container.partner');
     let clickable = true;
@@ -78,28 +103,24 @@ const DOM = (Player) => {
             if (playerMarkInGrid) {
               clickable = false;
               let y; let x;
+              changeTurnIndicator();
               const attackedCoordinates = await player.attack(playerMarkInGrid.coordinates);
-              if (Array.isArray(attackedCoordinates)) {
+              if (!attackedCoordinates) {
+                changeTurnIndicator();
+                clickable = true;
+              } else if (Array.isArray(attackedCoordinates)) {
                 [y, x] = attackedCoordinates;
                 const partnerCell = grid.children[y].children[x];
                 handleSVGIntoCell(partnerCell, player2.id);
+                changeTurnIndicator();
                 clickable = true;
               }
-              if (!attackedCoordinates) clickable = true;
               if (attackedCoordinates === 'game ended') clickable = false;
             }
           }
         }));
       }
     }
-  };
-
-  const addTurnIndicator = () => {
-    const turnIndicator = document.createElement('div');
-    turnIndicator.classList.add('turn-indicator');
-    turnIndicator.classList.add('player1');
-    turnIndicator.textContent = 'YOUR TURN';
-    return turnIndicator;
   };
 
   const populateDOMGrid = (gameboard, ofPlayerId) => {
@@ -123,12 +144,6 @@ const DOM = (Player) => {
     opponentGridContainer.classList.add('opponent');
     opponentGridContainer.classList.add('not-turn');
 
-    const gridContainerBorder = document.createElement('div');
-    gridContainerBorder.classList.add('grid-container-border');
-    [partnerGridContainer, opponentGridContainer].forEach((gridContainer) => {
-      gridContainer.appendChild(gridContainerBorder.cloneNode(true));
-    });
-
     [partnerGridContainer, opponentGridContainer].forEach((gridContainer, index) => {
       for (let i = 0; i < 10; i += 1) {
         const line = document.createElement('div');
@@ -137,6 +152,10 @@ const DOM = (Player) => {
         for (let j = 0; j < 10; j += 1) {
           const square = document.createElement('div');
           square.classList.add('square');
+          if (i === 0) square.classList.add('top');
+          if (i === 9) square.classList.add('bottom');
+          if (j === 0) square.classList.add('left');
+          if (j === 9) square.classList.add('right');
           if (index === 1) square.classList.add('opponent-square');
           square.setAttribute('data-square', j);
           line.appendChild(square);
