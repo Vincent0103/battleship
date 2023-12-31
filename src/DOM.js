@@ -94,6 +94,14 @@ const DOM = (Player) => {
     }
   };
 
+  const addTurnIndicator = () => {
+    const turnIndicator = document.createElement('div');
+    turnIndicator.classList.add('turn-indicator');
+    turnIndicator.classList.add('player1');
+    turnIndicator.textContent = 'YOUR TURN';
+    return turnIndicator;
+  };
+
   const populateDOMGrid = (gameboard, ofPlayerId) => {
     gameboard.forEach((line, y) => line.forEach((square, x) => {
       if (Number.isInteger(square.shipId)) {
@@ -113,6 +121,13 @@ const DOM = (Player) => {
     opponentGridContainer = document.createElement('div');
     opponentGridContainer.classList.add('grid-container');
     opponentGridContainer.classList.add('opponent');
+    opponentGridContainer.classList.add('not-turn');
+
+    const gridContainerBorder = document.createElement('div');
+    gridContainerBorder.classList.add('grid-container-border');
+    [partnerGridContainer, opponentGridContainer].forEach((gridContainer) => {
+      gridContainer.appendChild(gridContainerBorder.cloneNode(true));
+    });
 
     [partnerGridContainer, opponentGridContainer].forEach((gridContainer, index) => {
       for (let i = 0; i < 10; i += 1) {
@@ -133,9 +148,9 @@ const DOM = (Player) => {
     return [partnerGridContainer, opponentGridContainer];
   };
 
-  const addContent = () => buildDOMGrids();
-
-  return { addContent, populateDOMGrid, listenOpponentGridCells };
+  return {
+    addTurnIndicator, buildDOMGrids, populateDOMGrid, listenOpponentGridCells,
+  };
 };
 
 export default DOM;

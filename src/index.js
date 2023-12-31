@@ -6,8 +6,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const player = Player();
   const page = DOM(player);
   const pageContainer = document.querySelector('.page-container');
-  const gridContainers = page.addContent();
-  gridContainers.forEach((gridContainer) => pageContainer.appendChild(gridContainer));
+  const turnIndicatorContainer = page.addTurnIndicator();
+  const gridContainers = page.buildDOMGrids();
+  pageContainer.append(turnIndicatorContainer, gridContainers[0], gridContainers[1]);
 
   player.startGame('computer');
   const [partnerGrid, opponentGrid] = player.getGrids();
