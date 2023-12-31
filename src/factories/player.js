@@ -69,7 +69,7 @@ const Player = () => {
   };
 
   const attack = (coordinates) => {
-    if (!gameboard.areAllShipsSunk(player1.id) || !gameboard.areAllShipsSunk(player2.id)) {
+    if (!gameboard.areAllShipsSunk(player1.id) && !gameboard.areAllShipsSunk(player2.id)) {
       const currentPlayer = (player1.turn) ? player1 : player2;
       if (gameboard.receiveAttack(coordinates, currentPlayer.id)
       && !containsSubArray(currentPlayer.attackedCoordinates, coordinates)) {

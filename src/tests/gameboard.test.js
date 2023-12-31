@@ -109,9 +109,9 @@ describe('Gameboard', () => {
       gameboard3.receiveAttack([5, 7], 1);
       gameboard3.receiveAttack([3, 4], 1);
       gameboard3.receiveAttack([3, 5], 1);
-      expect(gameboard3.receiveAttack([4, 5], 0)).toBeFalsy();
-      expect(gameboard3.receiveAttack([6, 8], 0)).toBeFalsy();
-      expect(gameboard3.receiveAttack([5, 8], 1)).toBeFalsy();
+      expect(gameboard3.receiveAttack([4, 5], 0)).toEqual('game ended');
+      expect(gameboard3.receiveAttack([6, 8], 0)).toEqual('game ended');
+      expect(gameboard3.receiveAttack([5, 8], 1)).toEqual('game ended');
     });
 
     test('get correct missed shots coordinates', () => {
@@ -164,6 +164,7 @@ describe('Gameboard', () => {
 
       expect(gameboard3.areAllShipsSunk(0)).toBeTruthy();
       expect(gameboard3.areAllShipsSunk(1)).toBeFalsy();
+      expect(gameboard3.receiveAttack([2, 4], 1)).toEqual('game ended');
     });
   });
 });
