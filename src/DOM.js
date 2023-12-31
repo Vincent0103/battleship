@@ -157,7 +157,6 @@ const DOM = (Player) => {
           if (i === 9) square.classList.add('bottom');
           if (j === 0) square.classList.add('left');
           if (j === 9) square.classList.add('right');
-          if (index === 1) square.classList.add('opponent-square');
           square.setAttribute('data-square', j);
           line.appendChild(square);
         }
