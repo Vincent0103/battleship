@@ -135,6 +135,11 @@ const DOM = (Player) => {
     }
   };
 
+  const addLandingPage = () => {
+    const landingPageContainer = document.querySelector('landing-page-container');
+    
+  }
+
   const addBodyBgi = () => {
     const bodyBgi = document.createElement('div');
     bodyBgi.classList.add('body-bgi');
