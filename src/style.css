@@ -98,6 +98,9 @@ body {
 
 .line .square {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid rgba(188, 188, 188, 0.5);
   width: 100%;
   height: 100%;
@@ -122,24 +125,18 @@ body {
 
 .circle-icon {
   position: absolute;
-  height: 10px;
-  width: 10px;
-  top: 33%;
-  left: 33%;
+  height: 30%;
+  width: 30%;
 }
 
 .missed-icon {
   position: absolute;
-  height: 10px;
-  width: 10px;
-  top: 33%;
-  left: 33%;
+  height: 30%;
+  width: 30%;
 }
 
 .explosion-icon {
   position: absolute;
-  height: 20px;
-  width: 20px;
-  top: 12%;
-  left: 12%;
+  height: 70%;
+  width: 70%;
 }
