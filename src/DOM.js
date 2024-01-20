@@ -135,6 +135,12 @@ const DOM = (Player) => {
     }
   };
 
+  const addBodyBgi = () => {
+    const bodyBgi = document.createElement('div');
+    bodyBgi.classList.add('body-bgi');
+    document.body.appendChild(bodyBgi);
+  };
+
   const populateDOMGrid = (gameboard, ofPlayerId) => {
     gameboard.forEach((line, y) => line.forEach((square, x) => {
       if (Number.isInteger(square.shipId)) {
@@ -178,6 +184,7 @@ const DOM = (Player) => {
     return [partnerGridContainer, opponentGridContainer];
   };
 
+  addBodyBgi();
   return {
     addTurnIndicator, buildDOMGrids, populateDOMGrid, listenOpponentGridCells,
   };
