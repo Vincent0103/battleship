@@ -1,6 +1,7 @@
 import CircleIcon from './components/circle.svg';
 import MissedIcon from './components/missed.svg';
 import ExplosionIcon from './components/bomb-explosion.svg';
+import { buildGrid } from './utilities.js';
 
 const DOM = (Player) => {
   const player = Player;
@@ -135,11 +136,6 @@ const DOM = (Player) => {
     }
   };
 
-  const addLandingPage = () => {
-    const landingPageContainer = document.querySelector('landing-page-container');
-    
-  }
-
   const addBodyBgi = () => {
     const bodyBgi = document.createElement('div');
     bodyBgi.classList.add('body-bgi');
@@ -158,7 +154,7 @@ const DOM = (Player) => {
     }));
   };
 
-  const buildDOMGrids = () => {
+  const buildPlayerGrids = () => {
     partnerGridContainer = document.createElement('div');
     partnerGridContainer.classList.add('grid-container');
     partnerGridContainer.classList.add('partner');
@@ -167,31 +163,15 @@ const DOM = (Player) => {
     opponentGridContainer.classList.add('opponent');
     opponentGridContainer.classList.add('not-turn');
 
-    [partnerGridContainer, opponentGridContainer].forEach((gridContainer, index) => {
-      for (let i = 0; i < 10; i += 1) {
-        const line = document.createElement('div');
-        line.classList.add('line');
-        line.setAttribute('data-line', i);
-        for (let j = 0; j < 10; j += 1) {
-          const square = document.createElement('div');
-          square.classList.add('square');
-          if (i === 0) square.classList.add('top');
-          if (i === 9) square.classList.add('bottom');
-          if (j === 0) square.classList.add('left');
-          if (j === 9) square.classList.add('right');
-          square.setAttribute('data-square', j);
-          line.appendChild(square);
-        }
-        gridContainer.appendChild(line);
-      }
-    });
+    [partnerGridContainer, opponentGridContainer]
+      .forEach((gridContainer) => buildGrid(gridContainer));
 
     return [partnerGridContainer, opponentGridContainer];
   };
 
   addBodyBgi();
   return {
-    addTurnIndicator, buildDOMGrids, populateDOMGrid, listenOpponentGridCells,
+    addTurnIndicator, buildPlayerGrids, populateDOMGrid, listenOpponentGridCells,
   };
 };
 

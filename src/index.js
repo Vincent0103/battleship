@@ -1,5 +1,5 @@
 import './style.css';
-import DOM from './DOM.js';
+import DOM from './gameDOM.js';
 import Player from './factories/player.js';
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -7,7 +7,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const page = DOM(player);
   const pageContainer = document.querySelector('.page-container');
   const turnIndicatorContainer = page.addTurnIndicator();
-  const gridContainers = page.buildDOMGrids();
+  const gridContainers = page.buildPlayerGrids();
   pageContainer.append(turnIndicatorContainer, gridContainers[0], gridContainers[1]);
 
   player.startGame('computer');
