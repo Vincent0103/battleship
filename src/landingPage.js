@@ -1,5 +1,8 @@
+import { buildGrid } from "./utilities.js";
+
 const LandingPage = (landingPageContainer) => {
   const landingPageDIV = landingPageContainer;
+  let gridContainer = landingPageDIV.querySelector('.grid-container.user-placeable');
   const startBtn = landingPageContainer.querySelector('.start-btn');
 
   const listenStartBtn = () => {
@@ -9,6 +12,7 @@ const LandingPage = (landingPageContainer) => {
     });
   };
 
+  gridContainer = buildGrid(gridContainer);
   listenStartBtn();
 };
 
