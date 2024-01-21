@@ -7,6 +7,24 @@
   src: url(./components/NexaRustSans-Trial-BlackShadow1.ttf);
 }
 
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 ::selection {
   background: var(--border-bgc);
   color: white;

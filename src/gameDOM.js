@@ -3,7 +3,7 @@ import MissedIcon from './components/missed.svg';
 import ExplosionIcon from './components/bomb-explosion.svg';
 import { buildGrid } from './utilities.js';
 
-const gameDOM = (Player) => {
+const GameDOM = (Player) => {
   const player = Player;
   let partnerGridContainer;
   let opponentGridContainer;
@@ -176,4 +176,4 @@ const gameDOM = (Player) => {
   };
 };
 
-export default gameDOM;
+export default GameDOM;
