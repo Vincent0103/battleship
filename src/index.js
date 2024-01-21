@@ -1,10 +1,10 @@
 import './style.css';
-import DOM from './gameDOM.js';
+import gameDOM from './gameDOM.js';
 import Player from './factories/player.js';
 
 window.addEventListener('DOMContentLoaded', () => {
   const player = Player();
-  const page = DOM(player);
+  const page = gameDOM(player);
   const pageContainer = document.querySelector('.page-container');
   const turnIndicatorContainer = page.addTurnIndicator();
   const gridContainers = page.buildPlayerGrids();

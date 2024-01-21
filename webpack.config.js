@@ -10,7 +10,7 @@ export default {
   mode: 'development',
   entry: {
     index: './src/index.js',
-    DOM: './src/DOM.js',
+    gameDOM: './src/gameDOM.js',
     gameboard: './src/factories/gameboard.js',
     player: './src/factories/player.js',
     ship: './src/factories/ship.js',

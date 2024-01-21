@@ -3,7 +3,7 @@ import MissedIcon from './components/missed.svg';
 import ExplosionIcon from './components/bomb-explosion.svg';
 import { buildGrid } from './utilities.js';
 
-const DOM = (Player) => {
+const gameDOM = (Player) => {
   const player = Player;
   let partnerGridContainer;
   let opponentGridContainer;
@@ -82,6 +82,7 @@ const DOM = (Player) => {
       opponentGridContainer.classList.add('not-turn');
       partnerGridContainer.classList.remove('not-turn');
     }
+    return true;
   };
 
   const addTurnIndicator = () => {
@@ -175,4 +176,4 @@ const DOM = (Player) => {
   };
 };
 
-export default DOM;
+export default gameDOM;
