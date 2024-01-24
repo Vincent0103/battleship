@@ -15,27 +15,32 @@ const LandingPage = (landingPageContainer) => {
     return false;
   }
 
-  function listenDragEnter(square, shipLength) {
-    square.classList.toggle('over');
+  function listenDragEnterOrLeave(square, shipLength) {
     const line = square.parentElement;
     const gridContainerX = parseInt(square.getAttribute('data-square'), 10);
-    for (let i = 1; i < shipLength; i += 1) {
+    let isCurrentSquareUndefined = false;
+    for (let i = shipLength - 1; i >= 0; i -= 1) {
       const currentSquare = line.children[gridContainerX + i];
-      if (currentSquare === undefined) return false;
-      currentSquare.classList.toggle('over');
+      if (currentSquare === undefined && !isCurrentSquareUndefined) {
+        isCurrentSquareUndefined = true;
+      }
+      if (!isCurrentSquareUndefined) currentSquare.classList.toggle('over');
+      else if (currentSquare) currentSquare.classList.toggle('not-placeable');
     }
   }
 
-  function listenDragLeave(square, shipLength) {
-    square.classList.toggle('over');
-    const line = square.parentElement;
-    const gridContainerX = parseInt(square.getAttribute('data-square'), 10);
-    for (let i = 1; i < shipLength; i += 1) {
-      const currentSquare = line.children[gridContainerX + i];
-      if (currentSquare === undefined) return false;
-      currentSquare.classList.toggle('over');
-    }
-  }
+  // function listenDragLeave(square, shipLength) {
+  //   square.classList.toggle('over');
+  //   const line = square.parentElement;
+  //   const gridContainerX = parseInt(square.getAttribute('data-square'), 10);
+  //   let isCurrentSquareUndefined = false;
+  //   for (let i = 1; i < shipLength; i += 1) {
+  //     const currentSquare = line.children[gridContainerX + i];
+  //     if (currentSquare === undefined && !isCurrentSquareUndefined) isCurrentSquareUndefined = true;
+  //     else if (!isCurrentSquareUndefined) currentSquare.classList.toggle('over');
+  //     else currentSquare.classList.toggle('not-placeable');
+  //   }
+  // }
 
   function listenDrop(e, square, shipLength) {
     e.stopPropagation();
@@ -90,8 +95,8 @@ const LandingPage = (landingPageContainer) => {
     Array.from(gridContainer.children).forEach((line) => {
       Array.from(line.children).forEach((square) => {
         square.addEventListener('dragover', listenDragOver);
-        square.addEventListener('dragenter', () => listenDragEnter(square, currentDraggedShipLength));
-        square.addEventListener('dragleave', () => listenDragLeave(square, currentDraggedShipLength));
+        square.addEventListener('dragenter', () => listenDragEnterOrLeave(square, currentDraggedShipLength));
+        square.addEventListener('dragleave', () => listenDragEnterOrLeave(square, currentDraggedShipLength));
         square.addEventListener('drop', (e) => listenDrop(e, square, currentDraggedShipLength));
       });
     });
