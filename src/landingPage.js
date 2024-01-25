@@ -5,6 +5,18 @@ const LandingPage = (landingPageContainer) => {
   const placeableShipsContainer = landingPageDIV.querySelector('.placeable-ships-container');
   let gridContainer = landingPageDIV.querySelector('.grid-container.user-placeable');
   const startBtn = landingPageDIV.querySelector('.start-btn');
+  let currentDraggedShipLength = 0;
+  let isNotPlaceable = false;
+
+  // use it for listenDrop() in order to fix
+  // isNotPlaceable value priority between dragenter and dragleave
+  let isNotPlaceableWhenEntering = false;
+
+  function listenDragStart(ship) {
+    const currentShip = ship;
+    currentShip.style.opacity = '.4';
+    currentDraggedShipLength = currentShip.children.length;
+  }
 
   function listenDragEnd() {
     this.style.opacity = '1';
@@ -15,44 +27,36 @@ const LandingPage = (landingPageContainer) => {
     return false;
   }
 
-  function listenDragEnterOrLeave(square, shipLength) {
+  function listenDragEnterOrLeave(square, shipLength, isEntering = false) {
     const line = square.parentElement;
     const gridContainerX = parseInt(square.getAttribute('data-square'), 10);
-    let isCurrentSquareUndefined = false;
+    console.log(isNotPlaceable);
+    isNotPlaceable = false;
+    if (isEntering) isNotPlaceableWhenEntering = false;
     for (let i = shipLength - 1; i >= 0; i -= 1) {
       const currentSquare = line.children[gridContainerX + i];
-      if (currentSquare === undefined && !isCurrentSquareUndefined) {
-        isCurrentSquareUndefined = true;
+      if (currentSquare === undefined && !isNotPlaceable) {
+        isNotPlaceable = true;
+        if (isEntering) isNotPlaceableWhenEntering = true;
       }
-      if (!isCurrentSquareUndefined) currentSquare.classList.toggle('over');
+      if (!isNotPlaceable) currentSquare.classList.toggle('over');
       else if (currentSquare) currentSquare.classList.toggle('not-placeable');
     }
   }
 
-  // function listenDragLeave(square, shipLength) {
-  //   square.classList.toggle('over');
-  //   const line = square.parentElement;
-  //   const gridContainerX = parseInt(square.getAttribute('data-square'), 10);
-  //   let isCurrentSquareUndefined = false;
-  //   for (let i = 1; i < shipLength; i += 1) {
-  //     const currentSquare = line.children[gridContainerX + i];
-  //     if (currentSquare === undefined && !isCurrentSquareUndefined) isCurrentSquareUndefined = true;
-  //     else if (!isCurrentSquareUndefined) currentSquare.classList.toggle('over');
-  //     else currentSquare.classList.toggle('not-placeable');
-  //   }
-  // }
-
   function listenDrop(e, square, shipLength) {
     e.stopPropagation();
-    square.classList.remove('over');
-    square.classList.add('ship');
     const line = square.parentElement;
     const gridContainerX = parseInt(square.getAttribute('data-square'), 10);
-    for (let i = 1; i < shipLength; i += 1) {
+    for (let i = shipLength - 1; i >= 0; i -= 1) {
       const currentSquare = line.children[gridContainerX + i];
-      if (currentSquare === undefined) return false;
-      currentSquare.classList.remove('over');
-      currentSquare.classList.add('ship');
+      if (currentSquare) {
+        if (isNotPlaceableWhenEntering) currentSquare.classList.remove('not-placeable');
+        else {
+          currentSquare.classList.remove('over');
+          currentSquare.classList.add('ship');
+        }
+      }
     }
     return false;
   }
@@ -76,7 +80,6 @@ const LandingPage = (landingPageContainer) => {
     gridContainer = buildGrid(gridContainer);
     listenStartBtn();
     const shipLengths = [5, 4, 3, 3, 2];
-    let currentDraggedShipLength = 0;
 
     for (let i = 0; i < 5; i += 1) {
       const currentShip = placeableShipsContainer.children[i];
@@ -84,18 +87,14 @@ const LandingPage = (landingPageContainer) => {
       addShipCells(currentShip, shipLengths[i]);
 
       // eslint-disable-next-line no-loop-func
-      currentShip.addEventListener('dragstart', () => {
-        currentShip.style.opacity = '.4';
-        currentDraggedShipLength = currentShip.children.length;
-        console.log(currentDraggedShipLength);
-      });
+      currentShip.addEventListener('dragstart', () => listenDragStart(currentShip));
       currentShip.addEventListener('dragend', listenDragEnd);
     }
 
     Array.from(gridContainer.children).forEach((line) => {
       Array.from(line.children).forEach((square) => {
         square.addEventListener('dragover', listenDragOver);
-        square.addEventListener('dragenter', () => listenDragEnterOrLeave(square, currentDraggedShipLength));
+        square.addEventListener('dragenter', () => listenDragEnterOrLeave(square, currentDraggedShipLength, true));
         square.addEventListener('dragleave', () => listenDragEnterOrLeave(square, currentDraggedShipLength));
         square.addEventListener('drop', (e) => listenDrop(e, square, currentDraggedShipLength));
       });
