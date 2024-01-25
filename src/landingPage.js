@@ -16,9 +16,9 @@ const LandingPage = (landingPageContainer) => {
     for (let i = shipLength - 1; i >= 0; i -= 1) {
       const currentSquare = line.children[gridContainerX + i];
       if (currentSquare) {
+        currentSquare.classList.remove('over');
         if (isNotPlaceableWhenEntering) currentSquare.classList.remove('not-placeable');
         else {
-          currentSquare.classList.remove('over');
           currentSquare.classList.add('ship');
         }
       }
@@ -28,9 +28,11 @@ const LandingPage = (landingPageContainer) => {
   const handleGridHoverHint = (line, gridContainerX, shipLength, isEntering) => {
     for (let i = shipLength - 1; i >= 0; i -= 1) {
       const currentSquare = line.children[gridContainerX + i];
-      if (currentSquare === undefined && !isNotPlaceable) {
-        isNotPlaceable = true;
-        if (isEntering) isNotPlaceableWhenEntering = true;
+      if (!isNotPlaceable) {
+        if (currentSquare === undefined || currentSquare.classList.contains('ship')) {
+          isNotPlaceable = true;
+          if (isEntering) isNotPlaceableWhenEntering = true;
+        }
       }
       if (!isNotPlaceable) currentSquare.classList.toggle('over');
       else if (currentSquare) currentSquare.classList.toggle('not-placeable');
