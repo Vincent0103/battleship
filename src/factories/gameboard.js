@@ -126,6 +126,7 @@ const Gameboard = () => {
   return {
     buildGrids,
     placeShip,
+    areCellsAvailable,
     receiveAttack,
     areAllShipsSunk,
     getMissedShotsCoordinates: () => missedShotsCoordinates,

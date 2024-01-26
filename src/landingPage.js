@@ -1,49 +1,47 @@
 import { buildGrid } from './utilities.js';
+import Ship from './factories/ship.js';
+import Gameboard from './factories/gameboard.js';
 
 const LandingPage = (landingPageContainer) => {
   const landingPageDIV = landingPageContainer;
   const placeableShipsContainer = landingPageDIV.querySelector('.placeable-ships-container');
   let gridContainer = landingPageDIV.querySelector('.grid-container.user-placeable');
   const startBtn = landingPageDIV.querySelector('.start-btn');
-  let currentDraggedShipLength = 0;
-  let isNotPlaceable = false;
+  const gameboard = Gameboard();
+  gameboard.buildGrids();
+  let currentDraggedShip = 0;
 
-  // use it for listenDrop() in order to fix
-  // isNotPlaceable value priority between dragenter and dragleave
-  let isNotPlaceableWhenEntering = false;
-
-  const handleShipPlacement = (line, gridContainerX, shipLength) => {
-    for (let i = shipLength - 1; i >= 0; i -= 1) {
-      const currentSquare = line.children[gridContainerX + i];
-      if (currentSquare) {
+  const handleShipPlacement = (line, gridContainerX, ship) => {
+    if (!gameboard.placeShip(ship, [+line.getAttribute('data-line'), gridContainerX], 0, 'rightward')) {
+      for (let i = ship.getLength() - 1; i >= 0; i -= 1) {
+        const currentSquare = line.children[gridContainerX + i];
         currentSquare.classList.remove('over');
-        if (isNotPlaceableWhenEntering) currentSquare.classList.remove('not-placeable');
-        else {
-          currentSquare.classList.add('ship');
-        }
+        currentSquare.classList.remove('not-placeable');
+      }
+    } else {
+      for (let i = ship.getLength() - 1; i >= 0; i -= 1) {
+        const currentSquare = line.children[gridContainerX + i];
+        currentSquare.classList.remove('over');
+        currentSquare.classList.add('ship');
       }
     }
   };
 
-  const handleGridHoverHint = (line, gridContainerX, shipLength, isEntering) => {
-    const stack = [];
-    for (let i = shipLength - 1; i >= 0; i -= 1) {
+  const toggleSquareClasses = (line, gridContainerX, loopStart, loopEnd, loopStep, extraClass) => {
+    for (let i = loopStart; i !== loopEnd; i += loopStep) {
+      const currentSquareIndex = gridContainerX + i;
       const currentSquare = line.children[gridContainerX + i];
-      if (!isNotPlaceable) {
-        if (currentSquare === undefined || currentSquare.classList.contains('ship')) {
-          isNotPlaceable = true;
-          if (isEntering) isNotPlaceableWhenEntering = true;
-          while (stack.length > 0) {
-            const squareFromQ = stack.pop();
-            squareFromQ.classList.toggle('over');
-            squareFromQ.classList.toggle('not-placeable');
-          }
-        }
-      }
-      if (!isNotPlaceable) {
-        stack.push(currentSquare);
-        currentSquare.classList.toggle('over');
-      } else if (currentSquare) currentSquare.classList.toggle('not-placeable');
+      if (currentSquareIndex > 9) break;
+      currentSquare.classList.toggle('over');
+      if (extraClass) currentSquare.classList.toggle(extraClass);
+    }
+  };
+
+  const handleGridHoverHint = (line, gridContainerX, ship) => {
+    if (!gameboard.areCellsAvailable(ship.getLength(), [+line.getAttribute('data-line'), gridContainerX], 0, 'rightward')) {
+      toggleSquareClasses(line, gridContainerX, 0, ship.getLength(), 1, 'not-placeable');
+    } else {
+      toggleSquareClasses(line, gridContainerX, ship.getLength() - 1, -1, -1);
     }
   };
 
@@ -58,7 +56,7 @@ const LandingPage = (landingPageContainer) => {
   function listenDragStart(ship) {
     const currentShip = ship;
     currentShip.style.opacity = '.4';
-    currentDraggedShipLength = currentShip.children.length;
+    currentDraggedShip = Ship(currentShip.children.length);
   }
 
   function listenDragEnd() {
@@ -70,12 +68,10 @@ const LandingPage = (landingPageContainer) => {
     return false;
   }
 
-  function listenDragEnterOrLeave(square, shipLength, isEntering = false) {
+  function listenDragEnterOrLeave(square, ship) {
     const line = square.parentElement;
     const gridContainerX = +square.getAttribute('data-square');
-    isNotPlaceable = false;
-    if (isEntering) isNotPlaceableWhenEntering = false;
-    handleGridHoverHint(line, gridContainerX, shipLength, isEntering);
+    handleGridHoverHint(line, gridContainerX, ship);
   }
 
   function listenDrop(e, square, shipLength) {
@@ -108,9 +104,9 @@ const LandingPage = (landingPageContainer) => {
     Array.from(gridContainerParam.children).forEach((line) => {
       Array.from(line.children).forEach((square) => {
         square.addEventListener('dragover', listenDragOver);
-        square.addEventListener('dragenter', () => listenDragEnterOrLeave(square, currentDraggedShipLength, true));
-        square.addEventListener('dragleave', () => listenDragEnterOrLeave(square, currentDraggedShipLength));
-        square.addEventListener('drop', (e) => listenDrop(e, square, currentDraggedShipLength));
+        square.addEventListener('dragenter', () => listenDragEnterOrLeave(square, currentDraggedShip));
+        square.addEventListener('dragleave', () => listenDragEnterOrLeave(square, currentDraggedShip));
+        square.addEventListener('drop', (e) => listenDrop(e, square, currentDraggedShip));
       });
     });
   };
