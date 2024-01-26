@@ -26,16 +26,24 @@ const LandingPage = (landingPageContainer) => {
   };
 
   const handleGridHoverHint = (line, gridContainerX, shipLength, isEntering) => {
+    const stack = [];
     for (let i = shipLength - 1; i >= 0; i -= 1) {
       const currentSquare = line.children[gridContainerX + i];
       if (!isNotPlaceable) {
         if (currentSquare === undefined || currentSquare.classList.contains('ship')) {
           isNotPlaceable = true;
           if (isEntering) isNotPlaceableWhenEntering = true;
+          while (stack.length > 0) {
+            const squareFromQ = stack.pop();
+            squareFromQ.classList.toggle('over');
+            squareFromQ.classList.toggle('not-placeable');
+          }
         }
       }
-      if (!isNotPlaceable) currentSquare.classList.toggle('over');
-      else if (currentSquare) currentSquare.classList.toggle('not-placeable');
+      if (!isNotPlaceable) {
+        stack.push(currentSquare);
+        currentSquare.classList.toggle('over');
+      } else if (currentSquare) currentSquare.classList.toggle('not-placeable');
     }
   };
 
