@@ -57,6 +57,14 @@ describe('Gameboard', () => {
     expect(currentGridPartToTest).toBe(false);
   });
 
+  test('ship can\'t be placed on top of each other', () => {
+    currentGridPartToTest = gameboard2.placeShip(ship6, [8, 3], 0, 'rightward')[8].slice(3, 6);
+    currentGridPartToTest.forEach((item) => expect(Number.isInteger(item.shipId)).toBeTruthy());
+
+    currentGridPartToTest = gameboard2.placeShip(ship6, [8, 3], 0, 'rightward');
+    expect(currentGridPartToTest).toBe(false);
+  });
+
   describe('receive attacks and missed shots coordinates', () => {
     beforeEach(() => {
       gameboard2.placeShip(ship1, [0, 2], 1, 'downward');

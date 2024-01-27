@@ -7,6 +7,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const player = Player();
   const page = GameDOM(player);
   LandingPage(document.querySelector('.landing-page-container'));
+
+  // window.addEventListener('click', () => {
+  //   landingPage.getGameboard().getGrids();
+  // });
   const pageContainer = document.querySelector('.page-container');
   const turnIndicatorContainer = page.addTurnIndicator();
   const gridContainers = page.buildPlayerGrids();

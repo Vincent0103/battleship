@@ -41,48 +41,19 @@ const Gameboard = () => {
     return currentGrid;
   };
 
-  const offsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
-
   const hasShipId = (grid, y, x) => (y <= 9 && y >= 0 && x <= 9 && x >= 0)
     && Number.isInteger(grid[y][x].shipId);
 
-  const isCellAvailable = (
-    [y, x],
-    ofPlayerId,
-    orientation,
-    isBackShip = false,
-    isFrontShip = false,
-  ) => {
-    const currentGrid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
-    let currentOffsets;
+  const isCellAvailable = ([y, x], ofPlayerId) => {
     if (x > 9 || x < 0 || y > 9 || y < 0) return false;
-
-    if (orientation === 'rightward') {
-      currentOffsets = [offsets[0], offsets[1], offsets[2], offsets[5], offsets[6], offsets[7]];
-      return !(currentOffsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx))
-      || (isBackShip && hasShipId(currentGrid, y, x - 1))
-      || (isFrontShip && hasShipId(currentGrid, y, x + 1)));
-    }
-    if (orientation === 'downward') {
-      currentOffsets = [offsets[0], offsets[2], offsets[3], offsets[4], offsets[5], offsets[7]];
-      return !(currentOffsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx))
-      || (isBackShip && hasShipId(currentGrid, y - 1, x))
-      || (isFrontShip && hasShipId(currentGrid, y + 1, x)));
-    }
-    return true;
+    const currentGrid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
+    const offsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 0], [0, 1], [1, -1], [1, 0], [1, 1]];
+    return !(offsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx)));
   };
 
-  const areCellsAvailable = (length, [y, x], ofPlayerId, orientation) => {
-    for (let i = 0; i < length; i += 1) {
-      const currentCoordinates = (orientation === 'rightward') ? [y, x + i] : [y + i, x];
-      if (i === 0 && !isCellAvailable(currentCoordinates, ofPlayerId, orientation, true, false)) {
-        return false;
-      }
-      if (i === length - 1
-          && !isCellAvailable(currentCoordinates, ofPlayerId, orientation, false, true)) {
-        return false;
-      }
-      if (!isCellAvailable(currentCoordinates, ofPlayerId, orientation)) return false;
+  const areCellsAvailable = (shipLength, [y, x], ofPlayerId, orientation) => {
+    for (let i = 0; i < shipLength; i += 1) {
+      if (!isCellAvailable((orientation === 'rightward') ? [y, x + i] : [y + i, x], ofPlayerId)) return false;
     }
     return true;
   };
