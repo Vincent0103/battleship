@@ -14,23 +14,26 @@ const LandingPage = (landingPageContainer) => {
   const handleShipPlacement = (line, gridContainerX, ship) => {
     if (!gameboard.placeShip(ship, [+line.getAttribute('data-line'), gridContainerX], 0, 'rightward')) {
       for (let i = ship.getLength() - 1; i >= 0; i -= 1) {
-        const currentSquare = line.children[gridContainerX + i];
+        const currentSquareIndex = gridContainerX - i;
+        const currentSquare = line.children[gridContainerX - i];
+        if (currentSquareIndex > 9) break;
         currentSquare.classList.remove('over');
         currentSquare.classList.remove('not-placeable');
       }
-    } else {
-      for (let i = ship.getLength() - 1; i >= 0; i -= 1) {
-        const currentSquare = line.children[gridContainerX + i];
-        currentSquare.classList.remove('over');
-        currentSquare.classList.add('ship');
-      }
+      return false;
     }
+    for (let i = ship.getLength() - 1; i >= 0; i -= 1) {
+      const currentSquare = line.children[gridContainerX + i];
+      currentSquare.classList.remove('over');
+      currentSquare.classList.add('ship');
+    }
+    return true;
   };
 
   const toggleSquareClasses = (line, gridContainerX, loopStart, loopEnd, loopStep, extraClass) => {
     for (let i = loopStart; i !== loopEnd; i += loopStep) {
       const currentSquareIndex = gridContainerX + i;
-      const currentSquare = line.children[gridContainerX + i];
+      const currentSquare = line.children[currentSquareIndex];
       if (currentSquareIndex > 9) break;
       currentSquare.classList.toggle('over');
       if (extraClass) currentSquare.classList.toggle(extraClass);
@@ -55,12 +58,12 @@ const LandingPage = (landingPageContainer) => {
 
   function listenDragStart(ship) {
     const currentShip = ship;
-    currentShip.style.opacity = '.4';
+    currentShip.classList.add('already-in-use');
     currentDraggedShip = Ship(currentShip.children.length);
   }
 
   function listenDragEnd() {
-    this.style.opacity = '1';
+    // this.style.opacity = '1';
   }
 
   function listenDragOver(e) {
@@ -74,11 +77,14 @@ const LandingPage = (landingPageContainer) => {
     handleGridHoverHint(line, gridContainerX, ship);
   }
 
-  function listenDrop(e, square, shipLength) {
+  function listenDrop(e, square, shipLength, draggedFromDIV) {
     e.stopPropagation();
     const line = square.parentElement;
     const gridContainerX = +square.getAttribute('data-square');
-    handleShipPlacement(line, gridContainerX, shipLength);
+    if (!handleShipPlacement(line, gridContainerX, shipLength)) {
+      draggedFromDIV.classList.remove('already-used');
+    }
+    draggedFromDIV.setAttribute('draggable', 'false');
     return false;
   }
 
@@ -106,7 +112,7 @@ const LandingPage = (landingPageContainer) => {
         square.addEventListener('dragover', listenDragOver);
         square.addEventListener('dragenter', () => listenDragEnterOrLeave(square, currentDraggedShip));
         square.addEventListener('dragleave', () => listenDragEnterOrLeave(square, currentDraggedShip));
-        square.addEventListener('drop', (e) => listenDrop(e, square, currentDraggedShip));
+        square.addEventListener('drop', (e) => listenDrop(e, square, currentDraggedShip, document.querySelector(`.placeable-ships-container > *[data-length="${currentDraggedShip.getLength()}"]`)));
       });
     });
   };

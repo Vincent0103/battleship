@@ -122,6 +122,11 @@ body {
   cursor: move;
 }
 
+.placeable-ships-container > [id].already-in-use  {
+  opacity: .4;
+  cursor: default;
+}
+
 .placeable-ships-container .ship-cell {
   background-color: var(--ship-color);
   border: 1.5px solid #2c1b3d;
