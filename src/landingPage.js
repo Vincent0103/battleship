@@ -9,7 +9,8 @@ const LandingPage = (landingPageContainer) => {
   const startBtn = landingPageDIV.querySelector('.start-btn');
   const gameboard = Gameboard();
   gameboard.buildGrids();
-  let currentDraggedShip = 0;
+  let shipFunction = null;
+  let currentlyDraggedShip = null;
   let isShipBadDropped = true;
 
   const toggleSquareClasses = (line, gridContainerX, loopStart, loopEnd, loopStep, extraClass) => {
@@ -35,6 +36,11 @@ const LandingPage = (landingPageContainer) => {
     return true;
   };
 
+  const areAllShipsPlacedInGrid = () => {
+    const placeableShips = Array.from(placeableShipsContainer.querySelectorAll('[id]'));
+    return placeableShips.every((item) => item.getAttribute('draggable') === 'false');
+  };
+
   const handleGridHoverHint = (line, gridContainerX, ship) => {
     if (!gameboard.areCellsAvailable(ship.getLength(), [+line.getAttribute('data-line'), gridContainerX], 0, 'rightward')) {
       toggleSquareClasses(line, gridContainerX, 0, ship.getLength(), 1, 'not-placeable');
@@ -52,12 +58,15 @@ const LandingPage = (landingPageContainer) => {
   };
 
   function listenDragStart() {
-    this.classList.add('already-in-use');
-    currentDraggedShip = Ship(this.children.length);
+    if (this.draggable) {
+      this.classList.add('already-in-use');
+      currentlyDraggedShip = this;
+      shipFunction = Ship(currentlyDraggedShip.children.length);
+    }
   }
 
   function listenDragEnd() {
-    if (isShipBadDropped) {
+    if (isShipBadDropped && this.draggable === true) {
       this.classList.remove('already-in-use');
     } else {
       this.classList.add('already-in-use');
@@ -72,44 +81,51 @@ const LandingPage = (landingPageContainer) => {
   }
 
   function listenDragEnterOrLeave(square, ship) {
-    const line = square.parentElement;
-    const gridContainerX = +square.getAttribute('data-square');
-    handleGridHoverHint(line, gridContainerX, ship);
+    if (currentlyDraggedShip.draggable === true) {
+      const line = square.parentElement;
+      const gridContainerX = +square.getAttribute('data-square');
+      handleGridHoverHint(line, gridContainerX, ship);
+    }
   }
 
   function listenDrop(e, square, shipLength) {
     e.stopPropagation();
-    const line = square.parentElement;
-    const gridContainerX = +square.getAttribute('data-square');
-    if (handleShipPlacement(line, gridContainerX, shipLength)) isShipBadDropped = false;
+    if (currentlyDraggedShip.draggable === true) {
+      const line = square.parentElement;
+      const gridContainerX = +square.getAttribute('data-square');
+      if (handleShipPlacement(line, gridContainerX, shipLength)) isShipBadDropped = false;
+    }
     return false;
   }
 
   const listenStartBtn = () => {
     startBtn.addEventListener('click', () => {
-      landingPageDIV.style.animation = 'fadeOut forwards .5s';
-      setTimeout(() => landingPageDIV.remove(), 500);
+      if (areAllShipsPlacedInGrid()) {
+        landingPageDIV.style.animation = 'fadeOut forwards .5s';
+        setTimeout(() => Array.from(landingPageDIV.children).forEach((child) => {
+          child.remove();
+        }), 500);
+      }
     });
   };
 
-  const handleShips = () => {
-    for (let i = 0; i < 5; i += 1) {
-      const currentShip = placeableShipsContainer.children[i];
-      addShipCells(currentShip, currentShip.getAttribute('data-length'));
-      currentShip.addEventListener('dragstart', listenDragStart);
-      currentShip.addEventListener('dragend', listenDragEnd);
-    }
+  const handleShips = (e) => {
+    Array.from(placeableShipsContainer.children).forEach((ship) => {
+      addShipCells(ship, ship.getAttribute('data-length'));
+      ship.addEventListener('dragstart', listenDragStart);
+      ship.addEventListener('dragend', listenDragEnd);
+    });
   };
 
   const handleGridContainer = (gridContainerParam) => {
     Array.from(gridContainerParam.children).forEach((line) => {
       Array.from(line.children).forEach((square) => {
         square.addEventListener('dragover', listenDragOver);
-        square.addEventListener('dragenter', () => listenDragEnterOrLeave(square, currentDraggedShip));
-        square.addEventListener('dragleave', () => listenDragEnterOrLeave(square, currentDraggedShip));
+        square.addEventListener('dragenter', () => listenDragEnterOrLeave(square, shipFunction));
+        square.addEventListener('dragleave', () => listenDragEnterOrLeave(square, shipFunction));
         square.addEventListener('drop', (e) => {
-          const draggedFromDIV = document.querySelector(`.placeable-ships-container > *[data-length="${currentDraggedShip.getLength()}"]`);
-          listenDrop(e, square, currentDraggedShip, draggedFromDIV);
+          const draggedFromDIV = document.querySelector(`.placeable-ships-container > *[data-length="${shipFunction.getLength()}"]`);
+          listenDrop(e, square, shipFunction, draggedFromDIV);
         });
       });
     });
@@ -123,7 +139,6 @@ const LandingPage = (landingPageContainer) => {
   };
 
   addContent();
-  return { getGameboard: () => gameboard };
 };
 
 export default LandingPage;

@@ -33,4 +33,4 @@ The Odin Project for providing valuable resources and guidance.
 
 ### TODO
 
-- check for adjacent hits whenever ai hit a part of the boat
+- Fix bad on grid hover red border error when placing a ship

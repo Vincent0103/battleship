@@ -18,10 +18,10 @@ const Player = () => {
     return currentCoordinates;
   };
 
-  const initializeDefaultShips = (board) => {
-    const shipLengths = [5, 5, 4, 4, 3, 3, 3, 3, 2, 2];
-    for (let i = 0; i < 10; i += 1) {
-      const currentPlayer = (i % 2 === 0) ? player1 : player2;
+  const initializeDefaultShips = (board, forPlayerId) => {
+    const shipLengths = [5, 4, 3, 3, 2];
+    for (let i = 0; i < 5; i += 1) {
+      const currentPlayer = (forPlayerId === 0) ? player1 : player2;
       const getRandomOrientation = Math.round(Math.random());
       const orientation = (getRandomOrientation === 0) ? 'rightward' : 'downward';
       let isPlaceable = board.placeShip(
@@ -82,10 +82,14 @@ const Player = () => {
     return 'game ended';
   };
 
-  const startGame = (mode = 'computer') => {
-    gameboard = Gameboard();
-    gameboard.buildGrids();
-    initializeDefaultShips(gameboard);
+  const startGame = (mode = 'computer', landingPageGameboard = null) => {
+    if (landingPageGameboard) gameboard = landingPageGameboard;
+    else {
+      gameboard = Gameboard();
+      gameboard.buildGrids();
+      initializeDefaultShips(gameboard, 0);
+      initializeDefaultShips(gameboard, 1);
+    }
     gameMode = mode;
   };
 

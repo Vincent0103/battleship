@@ -6,11 +6,7 @@ import Player from './factories/player.js';
 window.addEventListener('DOMContentLoaded', () => {
   const player = Player();
   const page = GameDOM(player);
-  LandingPage(document.querySelector('.landing-page-container'));
-
-  // window.addEventListener('click', () => {
-  //   landingPage.getGameboard().getGrids();
-  // });
+  const landingPage = LandingPage(document.querySelector('.landing-page-container'));
   const pageContainer = document.querySelector('.page-container');
   const turnIndicatorContainer = page.addTurnIndicator();
   const gridContainers = page.buildPlayerGrids();
