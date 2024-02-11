@@ -1,4 +1,4 @@
-import Player from '../factories/player';
+import Player from '../player';
 
 describe('Player', () => {
   let player;

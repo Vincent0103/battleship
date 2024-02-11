@@ -44,8 +44,21 @@ const LandingPage = (landingPageContainer) => {
   const handleGridHoverHint = (line, gridContainerX, ship) => {
     if (!gameboard.areCellsAvailable(ship.getLength(), [+line.getAttribute('data-line'), gridContainerX], 0, 'rightward')) {
       toggleSquareClasses(line, gridContainerX, 0, ship.getLength(), 1, 'not-placeable');
+      // for (let i = 0; i !== ship.getLength(); i += 1) {
+      //   const currentSquareIndex = gridContainerX + i;
+      //   const currentSquare = line.children[currentSquareIndex];
+      //   if (currentSquareIndex > 9) break;
+      //   currentSquare.classList.toggle('over');
+      //   currentSquare.classList.toggle('not-placeable');
+      // }
     } else {
       toggleSquareClasses(line, gridContainerX, ship.getLength() - 1, -1, -1);
+      // for (let i = ship.getLength() - 1; i !== -1; i += -1) {
+      //   const currentSquareIndex = gridContainerX + i;
+      //   const currentSquare = line.children[currentSquareIndex];
+      //   if (currentSquareIndex > 9) break;
+      //   currentSquare.classList.toggle('over');
+      // }
     }
   };
 
