@@ -83,7 +83,10 @@ const Player = () => {
   };
 
   const startGame = (mode = 'computer', landingPageGameboard = null) => {
-    if (landingPageGameboard) gameboard = landingPageGameboard;
+    if (landingPageGameboard) {
+      gameboard = landingPageGameboard;
+      initializeDefaultShips(gameboard, 1);
+    }
     else {
       gameboard = Gameboard();
       gameboard.buildGrids();
