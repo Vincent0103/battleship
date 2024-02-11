@@ -60,8 +60,8 @@ const LandingPage = (landingPageContainer) => {
   function listenDragStart() {
     if (this.draggable) {
       this.classList.add('already-in-use');
+      shipFunction = Ship(this.children.length);
       currentlyDraggedShip = this;
-      shipFunction = Ship(currentlyDraggedShip.children.length);
     }
   }
 
@@ -102,14 +102,12 @@ const LandingPage = (landingPageContainer) => {
     startBtn.addEventListener('click', () => {
       if (areAllShipsPlacedInGrid()) {
         landingPageDIV.style.animation = 'fadeOut forwards .5s';
-        setTimeout(() => Array.from(landingPageDIV.children).forEach((child) => {
-          child.remove();
-        }), 500);
+        setTimeout(() => landingPageDIV.remove(), 500);
       }
     });
   };
 
-  const handleShips = (e) => {
+  const handleShips = () => {
     Array.from(placeableShipsContainer.children).forEach((ship) => {
       addShipCells(ship, ship.getAttribute('data-length'));
       ship.addEventListener('dragstart', listenDragStart);
@@ -133,12 +131,14 @@ const LandingPage = (landingPageContainer) => {
 
   const addContent = () => {
     gridContainer = buildGrid(gridContainer);
-    listenStartBtn();
     handleShips();
     handleGridContainer(gridContainer);
+    listenStartBtn();
   };
 
   addContent();
+
+  return { getGameboard: () => gameboard };
 };
 
 export default LandingPage;

@@ -102,6 +102,7 @@ const GameDOM = (Player) => {
       for (let j = 0; j < 10; j += 1) {
         const square = line.children[j];
         square.addEventListener('mouseenter', (e) => {
+          console.log('entering');
           handleSVGIntoCell(e.target, player1.id, 'mouseenter');
         });
         square.addEventListener('mouseleave', (e) => {
