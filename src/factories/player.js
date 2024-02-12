@@ -85,13 +85,13 @@ const Player = () => {
   const startGame = (mode = 'computer', landingPageGameboard = null) => {
     if (landingPageGameboard) {
       gameboard = landingPageGameboard;
-      initializeDefaultShips(gameboard, 1);
+      initializeDefaultShips(gameboard, player2.id);
     }
     else {
       gameboard = Gameboard();
       gameboard.buildGrids();
-      initializeDefaultShips(gameboard, 0);
-      initializeDefaultShips(gameboard, 1);
+      initializeDefaultShips(gameboard, player1.id);
+      initializeDefaultShips(gameboard, player2.id);
     }
     gameMode = mode;
   };
