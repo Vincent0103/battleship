@@ -8,6 +8,7 @@ const loadGame = () => {
     const player = Player();
     const page = GameDOM(player);
     const landingPageContainer = document.querySelector('.landing-page-container');
+    const startBtn = landingPageContainer.querySelector('.start-btn');
     const landingPage = LandingPage(landingPageContainer);
     const placeableShipsContainer = landingPageContainer.querySelector('.placeable-ships-container');
     let isGameStarted = false;
@@ -27,6 +28,7 @@ const loadGame = () => {
             page.populateDOMGrid(partnerGrid, 0);
             page.populateDOMGrid(opponentGrid, 1);
             page.listenOpponentGridCells();
+            startBtn.classList.add('enabled');
             isGameStarted = true;
           }
         }
