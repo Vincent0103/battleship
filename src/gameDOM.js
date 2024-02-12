@@ -44,7 +44,6 @@ const GameDOM = (Player) => {
         if (img) cell.removeChild(img);
       } else if (event === 'click') {
         if (cell.getAttribute('data-has-ship') && !isExplosedImgAlready) {
-          console.log(y, x);
           cell.appendChild(explosionImg);
           return { coordinates: [y, x] };
         } if (!isMissedImgAlready && !isExplosedImgAlready) {
@@ -65,11 +64,10 @@ const GameDOM = (Player) => {
     return false;
   };
 
-  const changeTurnIndicator = (isGameEnded = false) => {
-    if (isGameEnded) {
-      if (partnerGridContainer.classList.contains('not-turn')) {
-        turnIndicator.textContent = 'PLAYER 1 WINS';
-      } else turnIndicator.textContent = 'PLAYER 2 WINS';
+  const changeTurnIndicator = (winnerId = false) => {
+    if (Number.isInteger(winnerId)) {
+      if (winnerId === 0) turnIndicator.textContent = 'PLAYER 1 WINS';
+      else turnIndicator.textContent = 'PLAYER 2 WINS';
       partnerGridContainer.classList.add('not-turn');
       opponentGridContainer.classList.add('not-turn');
       setTimeout(() => handleGameEnd(document.querySelector('.restart-screen')), 5000);
@@ -123,24 +121,27 @@ const GameDOM = (Player) => {
               changeTurnIndicator();
               const attackedCoordinates = await player.attack(playerMarkInGrid.coordinates);
               const gameboard = player.getGameboard();
-              const players = player.getPlayers();
-              if (!attackedCoordinates) {
-                changeTurnIndicator();
-                clickable = true;
-              } else if (Array.isArray(attackedCoordinates)) {
+              if (gameboard.areAllShipsSunk(player1.id)) {
+                changeTurnIndicator(player2.id);
+                clickable = false;
+                return 'game ended';
+              }
+              if (gameboard.areAllShipsSunk(player2.id)) {
+                changeTurnIndicator(player1.id);
+                clickable = false;
+                return 'game ended';
+              }
+              if (!attackedCoordinates) changeTurnIndicator();
+              else {
                 [y, x] = attackedCoordinates;
                 const partnerCell = grid.children[y].children[x];
                 handleSVGIntoCell(partnerCell, player2.id);
                 changeTurnIndicator();
-                clickable = true;
               }
-              if (gameboard.areAllShipsSunk(players[0].id)
-              || gameboard.areAllShipsSunk(players[1].id)) {
-                changeTurnIndicator(true);
-                clickable = false;
-              }
+              clickable = true;
             }
           }
+          return true;
         }));
       }
     }
