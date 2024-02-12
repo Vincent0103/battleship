@@ -30,7 +30,3 @@ This project is licensed under the Layboy License.
 ## Acknowledgements
 
 The Odin Project for providing valuable resources and guidance.
-
-### TODO
-
-- Fix bad on grid hover red border error when placing a ship
