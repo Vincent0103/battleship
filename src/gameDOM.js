@@ -9,6 +9,10 @@ const GameDOM = (Player) => {
   let opponentGridContainer;
   let turnIndicator;
 
+  const handleGameEnd = (restartScreen) => {
+    restartScreen.classList.add('enabled');
+  };
+
   const handleSVGIntoCell = (targetCell, fromPlayerId, event = false) => {
     const cell = targetCell;
     const circleImg = document.createElement('img');
@@ -68,6 +72,7 @@ const GameDOM = (Player) => {
       } else turnIndicator.textContent = 'PLAYER 2 WINS';
       partnerGridContainer.classList.add('not-turn');
       opponentGridContainer.classList.add('not-turn');
+      setTimeout(() => handleGameEnd(document.querySelector('.restart-screen')), 5000);
       return 'game ended';
     }
     if (turnIndicator.classList.contains('player1')) {
@@ -117,6 +122,8 @@ const GameDOM = (Player) => {
               let y; let x;
               changeTurnIndicator();
               const attackedCoordinates = await player.attack(playerMarkInGrid.coordinates);
+              const gameboard = player.getGameboard();
+              const players = player.getPlayers();
               if (!attackedCoordinates) {
                 changeTurnIndicator();
                 clickable = true;
@@ -127,7 +134,8 @@ const GameDOM = (Player) => {
                 changeTurnIndicator();
                 clickable = true;
               }
-              if (attackedCoordinates === 'game ended') {
+              if (gameboard.areAllShipsSunk(players[0].id)
+              || gameboard.areAllShipsSunk(players[1].id)) {
                 changeTurnIndicator(true);
                 clickable = false;
               }

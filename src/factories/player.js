@@ -51,7 +51,7 @@ const Player = () => {
     }
   };
 
-  const getRandomAiThinkingTime = () => Math.random() * 2800 + 200;
+  const getRandomAiThinkingTime = () => Math.random() * 1900 + 100;
 
   const attackAI = () => {
     const currentCoordinates = getValidAIRandomCoordinates(player2);
@@ -99,7 +99,7 @@ const Player = () => {
   return {
     startGame,
     attack,
-    getGrids: () => gameboard.getGrids(),
+    getGameboard: () => gameboard,
     getPlayers: () => [player1, player2],
   };
 };

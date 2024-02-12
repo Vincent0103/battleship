@@ -4,8 +4,7 @@ import GameDOM from './gameDOM.js';
 import Player from './factories/player.js';
 
 const loadGame = () => {
-  const handleGamePage = (player, page) => {
-    const [partnerGrid, opponentGrid] = player.getGrids();
+  const handleGamePage = ([partnerGrid, opponentGrid], page) => {
     page.populateDOMGrid(partnerGrid, 0);
     page.populateDOMGrid(opponentGrid, 1);
     page.listenOpponentGridCells();
@@ -33,7 +32,7 @@ const loadGame = () => {
 
               const gameboard = landingPage.getGameboard();
               player.startGame('computer', gameboard);
-              handleGamePage(player, page);
+              handleGamePage(gameboard.getGrids(), page);
 
               startBtn.classList.add('enabled');
               isGameStarted = true;
