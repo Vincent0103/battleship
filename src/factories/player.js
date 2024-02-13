@@ -1,5 +1,5 @@
 import Gameboard from './gameboard.js';
-import { containsSubArray } from '../utilities.js';
+import { containsSubArray, fillCoordinatesArray } from '../utilities.js';
 import Ship from './ship.js';
 
 const Player = () => {
@@ -7,16 +7,13 @@ const Player = () => {
   const player1 = { id: 0, turn: true, attackedCoordinates: [] };
   const player2 = { id: 1, turn: false, attackedCoordinates: [] };
   let gameMode;
+  const GRID_XY_LIMIT = 10;
+  const notAttackedGridCoordinates = fillCoordinatesArray([]);
 
-  const getRandomCoordinates = () => [Math.round(Math.random() * 9), Math.round(Math.random() * 9)];
-
-  const getValidAIRandomCoordinates = () => {
-    const currentCoordinates = getRandomCoordinates();
-    if (containsSubArray(player2.attackedCoordinates, currentCoordinates)) {
-      return getValidAIRandomCoordinates(player2);
-    }
-    return currentCoordinates;
-  };
+  // eslint-disable-next-line max-len
+  const getRandomCoordinates = () => [Math.floor(Math.random() * GRID_XY_LIMIT), Math.floor(Math.random() * GRID_XY_LIMIT)];
+  // eslint-disable-next-line max-len
+  const getValidAIRandomCoordinates = () => notAttackedGridCoordinates.splice([Math.floor(Math.random() * notAttackedGridCoordinates.length)], 1)[0];
 
   const initializeDefaultShips = (board, forPlayerId) => {
     const shipLengths = [5, 4, 3, 3, 2];
@@ -55,11 +52,11 @@ const Player = () => {
 
   const attackAI = () => {
     const currentCoordinates = getValidAIRandomCoordinates(player2);
-    if (gameboard.receiveAttack(currentCoordinates, player2.id)
-    && !containsSubArray(player2.attackedCoordinates, currentCoordinates)) {
+    if (gameboard.receiveAttack(currentCoordinates, player2.id)) {
       player2.attackedCoordinates.push(currentCoordinates);
       changeTurn();
       return new Promise((resolve) => {
+        // setTimeout(() => resolve(currentCoordinates), 0);
         setTimeout(() => resolve(currentCoordinates), getRandomAiThinkingTime());
       });
     } if (gameboard.receiveAttack(currentCoordinates, player2.id) === 'game ended') {
@@ -86,8 +83,7 @@ const Player = () => {
     if (landingPageGameboard) {
       gameboard = landingPageGameboard;
       initializeDefaultShips(gameboard, player2.id);
-    }
-    else {
+    } else {
       gameboard = Gameboard();
       gameboard.buildGrids();
       initializeDefaultShips(gameboard, player1.id);

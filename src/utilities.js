@@ -1,4 +1,5 @@
 let ID;
+const GRID_XY_LIMIT = 10;
 const incrementalId = (defaultId) => {
   if (Number.isInteger(defaultId)) ID = defaultId;
   else if (ID === undefined) ID = 0;
@@ -32,5 +33,12 @@ const buildGrid = (gridContainer) => {
   return gridContainer;
 };
 
+const fillCoordinatesArray = (array) => {
+  for (let i = 0; i < GRID_XY_LIMIT; i += 1) {
+    for (let j = 0; j < GRID_XY_LIMIT; j += 1) array.push([i, j]);
+  }
+  return array;
+};
+
 export default incrementalId;
-export { containsSubArray, buildGrid };
+export { containsSubArray, buildGrid, fillCoordinatesArray };
