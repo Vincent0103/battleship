@@ -2,6 +2,8 @@ import CircleIcon from './components/circle.svg';
 import MissedIcon from './components/missed.svg';
 import ExplosionIcon from './components/bomb-explosion.svg';
 import { buildGrid } from './utilities.js';
+// eslint-disable-next-line import/no-cycle
+import Game from './game.js';
 
 const GameDOM = (Player) => {
   const player = Player;
@@ -10,7 +12,10 @@ const GameDOM = (Player) => {
   let turnIndicator;
 
   const handleGameEnd = (restartScreen) => {
-    restartScreen.classList.add('enabled');
+    const restartContainer = restartScreen;
+    restartContainer.classList.add('enabled');
+    const restartBtn = restartContainer.querySelector('.restart-btn');
+    restartBtn.addEventListener('click', () => Game().restartRound());
   };
 
   const handleSVGIntoCell = (targetCell, fromPlayerId, event = false) => {

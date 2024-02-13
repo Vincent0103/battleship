@@ -1,3 +1,3 @@
-import loadGame from './game.js';
+import Game from './game.js';
 
-loadGame();
+window.addEventListener('DOMContentLoaded', () => Game().loadContent());

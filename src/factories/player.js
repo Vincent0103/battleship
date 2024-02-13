@@ -60,8 +60,7 @@ const Player = () => {
       player2.attackedCoordinates.push(currentCoordinates);
       changeTurn();
       return new Promise((resolve) => {
-        setTimeout(() => resolve(currentCoordinates), 0);
-        // setTimeout(() => resolve(currentCoordinates), getRandomAiThinkingTime());
+        setTimeout(() => resolve(currentCoordinates), getRandomAiThinkingTime());
       });
     } if (gameboard.receiveAttack(currentCoordinates, player2.id) === 'game ended') {
       return 'game ended';
