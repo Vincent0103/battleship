@@ -1,21 +1,17 @@
-import Ship from './ship.js';
-
 const Gameboard = () => {
   const partnerShips = []; const opponentShips = [];
-  const grid = []; const opponentGrid = [];
+  const partnerGrid = []; const opponentGrid = [];
   const missedShotsCoordinates = [];
 
   const buildGrids = () => {
     for (let i = 0; i < 10; i += 1) {
-      [grid, opponentGrid].forEach((item) => item.push([]));
+      [partnerGrid, opponentGrid].forEach((item) => item.push([]));
       for (let j = 0; j < 10; j += 1) {
-        [grid, opponentGrid].forEach((item, id) => item[i].push(
-          { shipId: false, playerId: id },
-        ));
+        [partnerGrid, opponentGrid].forEach((item) => item[i].push({ shipId: null }));
       }
     }
 
-    return { grid, opponentGrid };
+    return { partnerGrid, opponentGrid };
   };
 
   const getShipFromCell = (cell, ofPlayerId) => {
@@ -27,7 +23,7 @@ const Gameboard = () => {
   };
 
   const occupyCells = ({ getLength, getId }, [y, x], ofPlayerId, orientation) => {
-    const currentGrid = (ofPlayerId === 0) ? grid : opponentGrid;
+    const currentGrid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
     let currentCell;
     if (orientation === 'rightward') {
       for (let i = 0; i < getLength(); i += 1) {
@@ -45,42 +41,21 @@ const Gameboard = () => {
     return currentGrid;
   };
 
-  const isCellAvailable = ([y, x], ofPlayerId, isPlaceable = true) => {
-    let canBePlaced = isPlaceable;
-    const currentGrid = (ofPlayerId === 0) ? grid : opponentGrid;
-    if (currentGrid[y] === undefined || currentGrid[y][x] === undefined) return false;
-    if (currentGrid[y][x].shipId) canBePlaced = false;
-    return canBePlaced;
+  const hasShipId = (grid, y, x) => (y <= 9 && y >= 0 && x <= 9 && x >= 0)
+    && Number.isInteger(grid[y][x].shipId);
+
+  const isCellAvailable = ([y, x], ofPlayerId) => {
+    if (x > 9 || x < 0 || y > 9 || y < 0) return false;
+    const currentGrid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
+    const offsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 0], [0, 1], [1, -1], [1, 0], [1, 1]];
+    return !(offsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx)));
   };
 
-  const isPlaceableSynchoronously = (length, [y, x], ofPlayerId, orientation, isPlaceable) => {
-    let canBePlaced = isPlaceable;
-    if (orientation === 'rightward') {
-      for (let i = 0; i < length; i += 1) {
-        canBePlaced = isCellAvailable([y, x + i], ofPlayerId, isPlaceable);
-      }
-    } else {
-      for (let j = 0; j < length; j += 1) {
-        canBePlaced = isCellAvailable([y + j, x], ofPlayerId, isPlaceable);
-      }
+  const areCellsAvailable = (shipLength, [y, x], ofPlayerId, orientation) => {
+    for (let i = 0; i < shipLength; i += 1) {
+      if (!isCellAvailable((orientation === 'rightward') ? [y, x + i] : [y + i, x], ofPlayerId)) return false;
     }
-
-    return canBePlaced;
-  };
-
-  const areCellsAvailable = (length, coordinates, ofPlayerId, orientation) => {
-    let isPlaceable = true;
-
-    // the for loop acts asynchoronously so we had to seperate it into it's own function
-    // in order to make it synchoronous
-    isPlaceable = isPlaceableSynchoronously(
-      length,
-      coordinates,
-      ofPlayerId,
-      orientation,
-      isPlaceable,
-    );
-    return isPlaceable;
+    return true;
   };
 
   const placeShip = (ship, coordinates, ofPlayerId = 0, orientation = 'rightward') => {
@@ -98,11 +73,11 @@ const Gameboard = () => {
   };
 
   const receiveAttack = (coordinates, toPlayerId) => {
-    if (areAllShipsSunk(0) || areAllShipsSunk(1)) return false;
+    if (areAllShipsSunk(0) || areAllShipsSunk(1)) return 'game ended';
     const [y, x] = coordinates;
     const currentId = toPlayerId;
     const [currentGrid, getShipFromPlayerId] = (currentId === 0)
-      ? [opponentGrid, 1] : [grid, 0];
+      ? [opponentGrid, 1] : [partnerGrid, 0];
     if (currentGrid[y] === undefined || currentGrid[y][x] === undefined) return false;
     const currentCell = currentGrid[y][x];
 
@@ -119,10 +94,14 @@ const Gameboard = () => {
     return missedShotCoordinates;
   };
 
-  const getMissedShotsCoordinates = () => missedShotsCoordinates;
-
   return {
-    buildGrids, placeShip, receiveAttack, getMissedShotsCoordinates, areAllShipsSunk,
+    buildGrids,
+    placeShip,
+    areCellsAvailable,
+    receiveAttack,
+    areAllShipsSunk,
+    getMissedShotsCoordinates: () => missedShotsCoordinates,
+    getGrids: () => [partnerGrid, opponentGrid],
   };
 };
 

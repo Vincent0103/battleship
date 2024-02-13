@@ -24,13 +24,11 @@ describe('Gameboard', () => {
 
   test('grids built correctly', () => {
     const grids = gameboard1.buildGrids();
-    grids.grid.forEach((line) => line.forEach((item) => {
-      expect(item.shipId).toBe(false);
-      expect(item.playerId).toEqual(0);
+    grids.partnerGrid.forEach((line) => line.forEach((item) => {
+      expect(item.shipId).toBeNull();
     }));
     grids.opponentGrid.forEach((line) => line.forEach((item) => {
-      expect(item.shipId).toBe(false);
-      expect(item.playerId).toEqual(1);
+      expect(item.shipId).toBeNull();
     }));
   });
 
@@ -56,6 +54,14 @@ describe('Gameboard', () => {
     expect(currentGridPartToTest).toBe(false);
 
     currentGridPartToTest = gameboard3.placeShip(ship3, [10, 1], 0, 'downward');
+    expect(currentGridPartToTest).toBe(false);
+  });
+
+  test('ship can\'t be placed on top of each other', () => {
+    currentGridPartToTest = gameboard2.placeShip(ship6, [8, 3], 0, 'rightward')[8].slice(3, 6);
+    currentGridPartToTest.forEach((item) => expect(Number.isInteger(item.shipId)).toBeTruthy());
+
+    currentGridPartToTest = gameboard2.placeShip(ship6, [8, 3], 0, 'rightward');
     expect(currentGridPartToTest).toBe(false);
   });
 
@@ -111,9 +117,9 @@ describe('Gameboard', () => {
       gameboard3.receiveAttack([5, 7], 1);
       gameboard3.receiveAttack([3, 4], 1);
       gameboard3.receiveAttack([3, 5], 1);
-      expect(gameboard3.receiveAttack([4, 5], 0)).toBeFalsy();
-      expect(gameboard3.receiveAttack([6, 8], 0)).toBeFalsy();
-      expect(gameboard3.receiveAttack([5, 8], 1)).toBeFalsy();
+      expect(gameboard3.receiveAttack([4, 5], 0)).toEqual('game ended');
+      expect(gameboard3.receiveAttack([6, 8], 0)).toEqual('game ended');
+      expect(gameboard3.receiveAttack([5, 8], 1)).toEqual('game ended');
     });
 
     test('get correct missed shots coordinates', () => {
@@ -166,6 +172,7 @@ describe('Gameboard', () => {
 
       expect(gameboard3.areAllShipsSunk(0)).toBeTruthy();
       expect(gameboard3.areAllShipsSunk(1)).toBeFalsy();
+      expect(gameboard3.receiveAttack([2, 4], 1)).toEqual('game ended');
     });
   });
 });

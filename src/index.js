@@ -1,5 +1,3 @@
-import './style.css';
+import Game from './game.js';
 
-window.addEventListener('DOMContentLoaded', () => {
-
-});
+window.addEventListener('DOMContentLoaded', () => Game().loadContent());

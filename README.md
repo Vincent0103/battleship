@@ -30,5 +30,3 @@ This project is licensed under the Layboy License.
 ## Acknowledgements
 
 The Odin Project for providing valuable resources and guidance.
-
-<!-- cant attack to own boats. -->
