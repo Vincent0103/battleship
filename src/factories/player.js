@@ -62,7 +62,7 @@ const Player = () => {
     } if (gameboard.receiveAttack(currentCoordinates, player2.id) === 'game ended') {
       return 'game ended';
     }
-    return attackAI();
+    return false;
   };
 
   const attack = (coordinates) => {

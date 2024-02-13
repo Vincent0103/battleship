@@ -41,4 +41,15 @@ describe('Player', () => {
     expect(player.getPlayers()[0].attackedCoordinates.length).toBe(2);
     expect(player.getPlayers()[1].attackedCoordinates.length).toBe(2);
   });
+
+  test('ai attacks on random coordinates correctly', () => {
+    player.startGame('computer');
+    player.attack([0, 4]);
+    player.attack([5, 7]);
+    player.attack([4, 3]);
+    player.attack([0, 3]);
+    player.attack([0, 4]); // false because it was already attacked
+    player.attack([9, 9]);
+    expect(player.getPlayers()[1].attackedCoordinates.length).toBe(5);
+  });
 });
