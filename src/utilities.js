@@ -33,6 +33,8 @@ const buildGrid = (gridContainer) => {
   return gridContainer;
 };
 
+const isNotOutOfBoundOfGrid = (y, x) => (y <= 9 && y >= 0 && x <= 9 && x >= 0);
+
 const fillCoordinatesArray = (array) => {
   for (let i = 0; i < GRID_XY_LIMIT; i += 1) {
     for (let j = 0; j < GRID_XY_LIMIT; j += 1) array.push([i, j]);
@@ -41,4 +43,6 @@ const fillCoordinatesArray = (array) => {
 };
 
 export default incrementalId;
-export { containsSubArray, buildGrid, fillCoordinatesArray };
+export {
+  containsSubArray, buildGrid, isNotOutOfBoundOfGrid, fillCoordinatesArray,
+};

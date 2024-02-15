@@ -18,6 +18,38 @@ const GameDOM = (Player) => {
     restartBtn.addEventListener('click', () => Game().restartRound());
   };
 
+  const handleGridClick = (
+    cell,
+    [explosionImg, missedImg],
+    [isExplosedImgAlready, isMissedImgAlready],
+  ) => {
+    const y = Number.parseInt(cell.parentNode.getAttribute('data-line'), 10);
+    const x = Number.parseInt(cell.getAttribute('data-square'), 10);
+
+    if (cell.getAttribute('data-has-ship') && !isExplosedImgAlready) {
+      cell.appendChild(explosionImg.cloneNode(true));
+      return { coordinates: [y, x] };
+    } if (!isMissedImgAlready && !isExplosedImgAlready) {
+      cell.appendChild(missedImg.cloneNode(true));
+      return { coordinates: [y, x] };
+    }
+    return false;
+  };
+
+  const handleGridEnter = (
+    cell,
+    circleImg,
+    [isMissedImgAlready, isExplosedImgAlready],
+  ) => {
+    if (!isMissedImgAlready && !isExplosedImgAlready
+      && turnIndicator.textContent === 'YOUR TURN') cell.appendChild(circleImg);
+  };
+
+  const handleGridLeave = (cell) => {
+    const img = cell.querySelector('img.circle-icon');
+    if (img) cell.removeChild(img);
+  };
+
   const handleSVGIntoCell = (targetCell, fromPlayerId, event = false) => {
     const cell = targetCell;
     const circleImg = document.createElement('img');
@@ -29,43 +61,23 @@ const GameDOM = (Player) => {
     missedImg.src = MissedIcon;
     missedImg.alt = 'missed cell icon';
     missedImg.classList.add('missed-icon');
-    const isMissedImgAlready = cell.querySelector('img.missed-icon');
 
     const explosionImg = document.createElement('img');
     explosionImg.src = ExplosionIcon;
     explosionImg.alt = 'explosed cell icon';
     explosionImg.classList.add('explosion-icon');
-    const isExplosedImgAlready = cell.querySelector('img.explosion-icon');
+    const imgs = [explosionImg, missedImg];
 
-    const y = Number.parseInt(cell.parentNode.getAttribute('data-line'), 10);
-    const x = Number.parseInt(cell.getAttribute('data-square'), 10);
+    const isMissedImgAlready = cell.querySelector('img.missed-icon');
+    const isExplosedImgAlready = cell.querySelector('img.explosion-icon');
+    const alreadyImgs = [isExplosedImgAlready, isMissedImgAlready];
 
     if (fromPlayerId === 0) {
-      if (event === 'mouseenter') {
-        if (!isMissedImgAlready && !isExplosedImgAlready
-          && turnIndicator.textContent === 'YOUR TURN') cell.appendChild(circleImg);
-      } else if (event === 'mouseleave') {
-        const img = cell.querySelector('img.circle-icon');
-        if (img) cell.removeChild(img);
-      } else if (event === 'click') {
-        if (cell.getAttribute('data-has-ship') && !isExplosedImgAlready) {
-          cell.appendChild(explosionImg);
-          return { coordinates: [y, x] };
-        } if (!isMissedImgAlready && !isExplosedImgAlready) {
-          cell.appendChild(missedImg);
-          return { coordinates: [y, x] };
-        }
-        return false;
-      }
-    } else {
-      if (cell.getAttribute('data-has-ship') && !isExplosedImgAlready) {
-        cell.appendChild(explosionImg);
-        return { coordinates: [y, x] };
-      } if (!isMissedImgAlready && !isExplosedImgAlready) {
-        cell.appendChild(missedImg);
-        return { coordinates: [y, x] };
-      }
+      if (event === 'mouseenter') handleGridEnter(cell, circleImg, alreadyImgs);
+      else if (event === 'mouseleave') handleGridLeave(cell);
     }
+
+    if (event === 'click') return handleGridClick(cell, imgs, alreadyImgs);
     return false;
   };
 
@@ -140,7 +152,7 @@ const GameDOM = (Player) => {
               else {
                 [y, x] = attackedCoordinates;
                 const partnerCell = grid.children[y].children[x];
-                handleSVGIntoCell(partnerCell, player2.id);
+                handleSVGIntoCell(partnerCell, player2.id, 'click');
                 changeTurnIndicator();
               }
               clickable = true;

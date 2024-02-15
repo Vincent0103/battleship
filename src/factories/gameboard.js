@@ -1,3 +1,5 @@
+import { isNotOutOfBoundOfGrid } from '../utilities.js';
+
 const Gameboard = () => {
   const partnerShips = []; const opponentShips = [];
   const partnerGrid = []; const opponentGrid = [];
@@ -41,8 +43,8 @@ const Gameboard = () => {
     return currentGrid;
   };
 
-  const hasShipId = (grid, y, x) => (y <= 9 && y >= 0 && x <= 9 && x >= 0)
-    && Number.isInteger(grid[y][x].shipId);
+  const hasShipId = (grid, y, x) => isNotOutOfBoundOfGrid(y, x)
+   && Number.isInteger(grid[y][x].shipId);
 
   const isCellAvailable = ([y, x], ofPlayerId) => {
     if (x > 9 || x < 0 || y > 9 || y < 0) return false;
