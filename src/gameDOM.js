@@ -76,7 +76,6 @@ const GameDOM = (Player) => {
       if (event === 'mouseenter') handleGridEnter(cell, circleImg, alreadyImgs);
       else if (event === 'mouseleave') handleGridLeave(cell);
     }
-
     if (event === 'click') return handleGridClick(cell, imgs, alreadyImgs);
     return false;
   };

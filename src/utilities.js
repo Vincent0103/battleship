@@ -8,6 +8,7 @@ const incrementalId = (defaultId) => {
 };
 
 const containsSubArray = (rootArray, targetArray) => {
+  if (!rootArray || rootArray.length === 0) return false;
   const rootArrayString = rootArray.map((array) => array.toString());
   const targetArrayString = targetArray.toString();
   return rootArrayString.includes(targetArrayString);
@@ -35,7 +36,7 @@ const buildGrid = (gridContainer) => {
 
 const isNotOutOfBoundOfGrid = (y, x) => (y <= 9 && y >= 0 && x <= 9 && x >= 0);
 
-const fillCoordinatesArray = (array) => {
+const fillGridCoordinatesArray = (array = []) => {
   for (let i = 0; i < GRID_XY_LIMIT; i += 1) {
     for (let j = 0; j < GRID_XY_LIMIT; j += 1) array.push([i, j]);
   }
@@ -44,5 +45,5 @@ const fillCoordinatesArray = (array) => {
 
 export default incrementalId;
 export {
-  containsSubArray, buildGrid, isNotOutOfBoundOfGrid, fillCoordinatesArray,
+  containsSubArray, buildGrid, isNotOutOfBoundOfGrid, fillGridCoordinatesArray,
 };

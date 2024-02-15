@@ -1,5 +1,5 @@
 import Gameboard from './gameboard.js';
-import { containsSubArray, isNotOutOfBoundOfGrid, fillCoordinatesArray } from '../utilities.js';
+import { containsSubArray, isNotOutOfBoundOfGrid, fillGridCoordinatesArray } from '../utilities.js';
 import Ship from './ship.js';
 
 const Player = () => {
@@ -25,27 +25,34 @@ const Player = () => {
     }
   };
 
+  // eslint-disable-next-line max-len
+  const getRandomCoordinates = () => [Math.floor(Math.random() * GRID_XY_LIMIT), Math.floor(Math.random() * GRID_XY_LIMIT)];
+
   const AI = (player) => {
     const aiPlayer = player;
     const directions = { rightward: [[0, -1], [0, 1]], downward: [[-1, 0], [1, 0]] };
     const coordinatesToCheck = {
-      sourceArray: null, lastArray: null, values: { rightward: [], downward: [] },
+      sourceArray: null,
+      lastArray: null,
+      values: { rightward: [], downward: [] },
+      oneSideCheck: false,
     };
     let hitShipAfterAMissedShot = false;
     let currentCoordinates;
-    aiPlayer.notAttackedGridCoordinates = fillCoordinatesArray([]);
+    aiPlayer.notAttackedGridCoordinates = fillGridCoordinatesArray();
 
     const getRandomAiThinkingTime = () => Math.random() * 1900 + 100;
 
     // eslint-disable-next-line max-len
-    const getValidAIRandomCoordinates = (player) => player.notAttackedGridCoordinates[Math.floor(Math.random() * player.notAttackedGridCoordinates.length)];
+    const getValidAIRandomCoordinates = (player) => player.notAttackedGridCoordinates.splice(Math.floor(Math.random() * player.notAttackedGridCoordinates.length), 1)[0];
 
-    const getNextCoordinates = (YDifference, XDifference) => {
+    const getNextCoordinates = (YDifference, XDifference, iterationCount = 0) => {
       let direction;
       let [newY, newX] = [currentCoordinates[0], currentCoordinates[1]];
       let paramY = YDifference;
       let paramX = XDifference;
 
+      if (iterationCount === 2) return false;
       if (Math.abs(paramX) === 1) {
         direction = 'rightward';
         newX = currentCoordinates[1] + paramX;
@@ -57,28 +64,28 @@ const Player = () => {
       } else {
         paramY = currentCoordinates[0] - coordinatesToCheck.sourceArray[0];
         paramX = currentCoordinates[1] - coordinatesToCheck.sourceArray[1];
-        return getNextCoordinates(paramY, paramX);
+        return getNextCoordinates(paramY, paramX, iterationCount + 1);
       }
 
       return { direction, newY, newX };
     };
 
     const attack = () => {
-      const rightwardLength = coordinatesToCheck.values.rightward.length;
-      const downwardLength = coordinatesToCheck.values.downward.length;
       if (hitShipAfterAMissedShot) {
-        if (rightwardLength > 0) {
+        if (coordinatesToCheck.values.rightward.length > 0) {
           currentCoordinates = coordinatesToCheck.values.rightward.pop();
-        } else if (downwardLength > 0) {
+        } else if (coordinatesToCheck.values.downward.length > 0) {
           currentCoordinates = coordinatesToCheck.values.downward.pop();
         }
       } else {
         currentCoordinates = getValidAIRandomCoordinates(aiPlayer);
       }
+
       const { notAttackedGridCoordinates } = aiPlayer;
-      const currentCoordinatesIndex = notAttackedGridCoordinates.indexOf(currentCoordinates);
-      notAttackedGridCoordinates.splice(currentCoordinatesIndex, 1);
-      const receiveAttack = gameboard.receiveAttack(currentCoordinates, aiPlayer.id);
+      let receiveAttack = gameboard.receiveAttack(currentCoordinates, aiPlayer.id);
+      while (!receiveAttack) {
+        receiveAttack = gameboard.receiveAttack(getRandomCoordinates(), aiPlayer.id);
+      }
 
       if (!hitShipAfterAMissedShot && receiveAttack.getHits && receiveAttack.getLength) {
         hitShipAfterAMissedShot = true;
@@ -97,25 +104,34 @@ const Player = () => {
       } else if (hitShipAfterAMissedShot && receiveAttack.getHits && receiveAttack.getLength) {
         const YDifference = currentCoordinates[0] - coordinatesToCheck.lastArray[0];
         const XDifference = currentCoordinates[1] - coordinatesToCheck.lastArray[1];
-        const { direction, newY, newX } = getNextCoordinates(YDifference, XDifference);
 
-        coordinatesToCheck.lastArray = currentCoordinates;
-        if (containsSubArray(notAttackedGridCoordinates, [newY, newX])
-          && isNotOutOfBoundOfGrid(newY, newX)) {
-          coordinatesToCheck.values[direction].push([newY, newX]);
+        const valuesOfGetNextCoordinates = getNextCoordinates(YDifference, XDifference);
+        const { direction, newY, newX } = valuesOfGetNextCoordinates;
+
+        if (valuesOfGetNextCoordinates) {
+          coordinatesToCheck.lastArray = currentCoordinates;
+          if (containsSubArray(notAttackedGridCoordinates, [newY, newX])
+            && isNotOutOfBoundOfGrid(newY, newX)) {
+            coordinatesToCheck.values[direction].push([newY, newX]);
+          }
         }
-      } else if (hitShipAfterAMissedShot && receiveAttack
-         && rightwardLength === 0) {
+      } else if (!coordinatesToCheck.oneSideCheck && hitShipAfterAMissedShot
+        && typeof receiveAttack === 'object') {
+        coordinatesToCheck.oneSideCheck = true;
+      } else {
         hitShipAfterAMissedShot = false;
+        coordinatesToCheck.sourceArray = null;
+        coordinatesToCheck.lastArray = null;
+        coordinatesToCheck.oneSideCheck = false;
+        coordinatesToCheck.values.rightward.length = 0;
+        coordinatesToCheck.values.downward.length = 0;
       }
 
       if (typeof receiveAttack === 'object') {
-        player2.attackedCoordinates.push(currentCoordinates);
-        console.log(player2.attackedCoordinates);
+        aiPlayer.attackedCoordinates.push(currentCoordinates);
         changeTurn();
         return new Promise((resolve) => {
-          // setTimeout(() => resolve(currentCoordinates), getRandomAiThinkingTime());
-          setTimeout(() => resolve(currentCoordinates), 0);
+          setTimeout(() => resolve(currentCoordinates), getRandomAiThinkingTime());
         });
       } if (receiveAttack === 'game ended') {
         return 'game ended';
@@ -125,9 +141,6 @@ const Player = () => {
 
     return { attack };
   };
-
-  // eslint-disable-next-line max-len
-  const getRandomCoordinates = () => [Math.floor(Math.random() * GRID_XY_LIMIT), Math.floor(Math.random() * GRID_XY_LIMIT)];
 
   const initializeDefaultShips = (board, forPlayerId) => {
     const shipLengths = [5, 4, 3, 3, 2];
