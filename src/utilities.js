@@ -8,10 +8,10 @@ const incrementalId = (defaultId) => {
 };
 
 const containsSubArray = (rootArray, targetArray) => {
-  if (!rootArray || rootArray.length === 0) return false;
-  const rootArrayString = rootArray.map((array) => array.toString());
-  const targetArrayString = targetArray.toString();
-  return rootArrayString.includes(targetArrayString);
+  if (!rootArray || !targetArray || rootArray.length === 0
+    || targetArray.length === 0) return false;
+  return rootArray.some((rootSubArray) => rootSubArray.length === targetArray.length
+    && rootSubArray.every((value, index) => value === targetArray[index]));
 };
 
 const buildGrid = (gridContainer) => {

@@ -147,7 +147,7 @@ const GameDOM = (Player) => {
                 clickable = false;
                 return 'game ended';
               }
-              if (!attackedCoordinates) changeTurnIndicator();
+              if (!attackedCoordinates || attackedCoordinates.length === 0) changeTurnIndicator();
               else {
                 [y, x] = attackedCoordinates;
                 const partnerCell = grid.children[y].children[x];
