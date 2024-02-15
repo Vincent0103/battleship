@@ -65,15 +65,34 @@ describe('Gameboard', () => {
     expect(currentGridPartToTest).toBe(false);
   });
 
+  test('empty grid map correctly when ships are placed', () => {
+    const PLAYER_ID = 0;
+    gameboard3.placeShip(ship4, [5, 2], PLAYER_ID, 'downward');
+    gameboard3.placeShip(ship2, [2, 3], PLAYER_ID, 'rightward');
+    gameboard3.placeShip(ship3, [0, 0], PLAYER_ID, 'downward');
+    gameboard3.placeShip(ship5, [7, 6], PLAYER_ID, 'downward');
+
+    let [grid] = gameboard3.getGrids();
+    expect(Number.isInteger(grid[1][0].shipId)).toBeTruthy();
+    expect(Number.isInteger(grid[7][6].shipId)).toBeTruthy();
+    expect(Number.isInteger(grid[8][2].shipId)).toBeTruthy();
+    expect(Number.isInteger(grid[9][2].shipId)).toBeTruthy();
+
+    grid = gameboard3.emptyGrid(PLAYER_ID, grid);
+    grid.forEach((line) => line.forEach((square) => {
+      expect(square.shipId).toBeNull();
+    }));
+  });
+
   describe('receive attacks and missed shots coordinates', () => {
     beforeEach(() => {
       gameboard2.placeShip(ship1, [0, 2], 1, 'downward');
       gameboard2.placeShip(ship2, [3, 7], 1, 'downward');
       gameboard2.placeShip(ship3, [1, 5], 1);
-      gameboard2.placeShip(ship4, [4, 1]); // 5
-      gameboard2.placeShip(ship5, [5, 7], 0, 'downward'); // 1
+      gameboard2.placeShip(ship4, [4, 1]);
+      gameboard2.placeShip(ship5, [5, 7], 0, 'downward');
       gameboard2.placeShip(ship6, [9, 0], 1);
-      gameboard2.placeShip(ship7, [3, 4]); // 2
+      gameboard2.placeShip(ship7, [3, 4]);
     });
 
     test('act correctly when given valid coordinates', () => {

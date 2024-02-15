@@ -2,10 +2,13 @@ import { buildGrid } from './utilities.js';
 import Ship from './factories/ship.js';
 import Gameboard from './factories/gameboard.js';
 
-const LandingPage = (landingPageContainer) => {
+const LandingPage = (landingPageContainer, Player) => {
+  const player = Player;
+  const [firstPlayer] = player.getPlayers();
   const landingPageDIV = landingPageContainer;
   const placeableShipsContainer = landingPageDIV.querySelector('.placeable-ships-container');
   let gridContainer = landingPageDIV.querySelector('.grid-container.user-placeable');
+  const randomizeBtn = placeableShipsContainer.querySelector('.randomize-btn');
   const startBtn = landingPageDIV.querySelector('.start-btn');
   const gameboard = Gameboard();
   gameboard.buildGrids();
@@ -97,6 +100,12 @@ const LandingPage = (landingPageContainer) => {
     }
     return false;
   }
+
+  const listenRandomizeBtn = () => {
+    randomizeBtn.addEventListener('click', () => {
+      player.initializeDefaultShips(gameboard, firstPlayer.id);
+    });
+  };
 
   const listenStartBtn = () => {
     startBtn.addEventListener('click', () => {

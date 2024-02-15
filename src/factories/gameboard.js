@@ -5,11 +5,24 @@ const Gameboard = () => {
   const partnerGrid = []; const opponentGrid = [];
   const missedShotsCoordinates = [];
 
+  const emptyGrid = (ofPlayerId) => {
+    const grid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
+    grid.forEach((line) => {
+      line.forEach((square) => {
+        const cell = square;
+        cell.shipId = null;
+        cell.isHit = false;
+      });
+    });
+
+    return grid;
+  };
+
   const buildGrids = () => {
     for (let i = 0; i < 10; i += 1) {
       [partnerGrid, opponentGrid].forEach((item) => item.push([]));
       for (let j = 0; j < 10; j += 1) {
-        [partnerGrid, opponentGrid].forEach((item) => item[i].push({ shipId: null }));
+        [partnerGrid, opponentGrid].forEach((item) => item[i].push({ shipId: null, isHit: false }));
       }
     }
 
@@ -98,6 +111,7 @@ const Gameboard = () => {
 
   return {
     buildGrids,
+    emptyGrid,
     placeShip,
     areCellsAvailable,
     receiveAttack,

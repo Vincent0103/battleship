@@ -186,6 +186,7 @@ const Player = () => {
         );
       }
     }
+    return board;
   };
 
   const ai = AI((player1.turn) ? player2 : player1);
@@ -219,6 +220,7 @@ const Player = () => {
   return {
     startGame,
     attack,
+    initializeDefaultShips,
     getGameboard: () => gameboard,
     getPlayers: () => [player1, player2],
   };
