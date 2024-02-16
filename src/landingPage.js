@@ -101,9 +101,30 @@ const LandingPage = (landingPageContainer, Player) => {
     return false;
   }
 
+  const emptyUserPlaceableGrid = (board) => {
+    board.forEach((line, y) => line.forEach((square, x) => {
+      const cell = gridContainer.children[y].children[x];
+      if (cell.classList.contains('ship')) {
+        cell.classList.remove('ship');
+      }
+    }));
+  };
+
+  const populateUserPlaceableGrid = (board) => {
+    emptyUserPlaceableGrid(board);
+    board.forEach((line, y) => line.forEach((square, x) => {
+      if (Number.isInteger(square.shipId)) {
+        const cell = gridContainer.children[y].children[x];
+        cell.classList.add('ship');
+      }
+    }));
+  };
+
   const listenRandomizeBtn = () => {
     randomizeBtn.addEventListener('click', () => {
       player.initializeDefaultShips(gameboard, firstPlayer.id);
+      const [partnerGridContainer] = gameboard.getGrids();
+      populateUserPlaceableGrid(partnerGridContainer);
     });
   };
 
@@ -142,6 +163,7 @@ const LandingPage = (landingPageContainer, Player) => {
     gridContainer = buildGrid(gridContainer);
     handleShips();
     handleGridContainer(gridContainer);
+    listenRandomizeBtn();
     listenStartBtn();
   };
 

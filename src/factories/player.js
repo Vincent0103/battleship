@@ -166,6 +166,7 @@ const Player = () => {
   };
 
   const initializeDefaultShips = (board, forPlayerId) => {
+    board.emptyGrid(forPlayerId);
     const shipLengths = [5, 4, 3, 3, 2];
     for (let i = 0; i < 5; i += 1) {
       const currentPlayer = (forPlayerId === 0) ? player1 : player2;
