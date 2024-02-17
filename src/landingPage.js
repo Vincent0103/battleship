@@ -2,14 +2,11 @@ import { buildGrid } from './utilities.js';
 import Ship from './factories/ship.js';
 import Gameboard from './factories/gameboard.js';
 
-const LandingPage = (landingPageContainer, Player) => {
-  const player = Player;
-  const [firstPlayer] = player.getPlayers();
+const LandingPage = (landingPageContainer, GameDOM, Player) => {
   const landingPageDIV = landingPageContainer;
   const placeableShipsContainer = landingPageDIV.querySelector('.placeable-ships-container');
   let gridContainer = landingPageDIV.querySelector('.grid-container.user-placeable');
   const randomizeBtn = placeableShipsContainer.querySelector('.randomize-btn');
-  const startBtn = landingPageDIV.querySelector('.start-btn');
   const gameboard = Gameboard();
   gameboard.buildGrids();
   let shipFunction = null;
@@ -120,8 +117,9 @@ const LandingPage = (landingPageContainer, Player) => {
     }));
   };
 
-  const listenRandomizeBtn = () => {
+  const listenRandomizeBtn = (player) => {
     randomizeBtn.addEventListener('click', () => {
+      const [firstPlayer] = player.getPlayers();
       player.initializeDefaultShips(gameboard, firstPlayer.id);
       const [partnerGridContainer] = gameboard.getGrids();
       populateUserPlaceableGrid(partnerGridContainer);
@@ -133,9 +131,30 @@ const LandingPage = (landingPageContainer, Player) => {
     });
   };
 
-  const listenStartBtn = () => {
+  const listenStartBtn = (player) => {
+    const startBtn = landingPageDIV.querySelector('.start-btn');
+
+    const handleGamePage = () => {
+      const page = GameDOM;
+
+      const Indicator = page.Indicator();
+      const turnIndicatorContainer = Indicator.addTurnIndicator();
+
+      const pageContainer = document.querySelector('.page-container');
+      const gridContainers = page.buildPlayerGrids();
+      pageContainer.append(turnIndicatorContainer, gridContainers[0], gridContainers[1]);
+
+      player.startGame('computer', gameboard);
+
+      const [partnerGrid, opponentGrid] = gameboard.getGrids();
+      page.populateDOMGrid(partnerGrid, 0);
+      page.populateDOMGrid(opponentGrid, 1);
+      page.listenOpponentGridCells(Indicator);
+    };
+
     startBtn.addEventListener('click', () => {
       if (areAllShipsPlacedInGrid()) {
+        handleGamePage();
         landingPageDIV.style.animation = 'fadeOut forwards .5s';
         setTimeout(() => landingPageDIV.remove(), 500);
       }
@@ -165,16 +184,15 @@ const LandingPage = (landingPageContainer, Player) => {
   };
 
   const addContent = () => {
+    const player = Player;
     gridContainer = buildGrid(gridContainer);
     handleShips();
     handleGridContainer(gridContainer);
-    listenRandomizeBtn();
-    listenStartBtn();
+    listenRandomizeBtn(player);
+    listenStartBtn(player);
   };
 
   addContent();
-
-  return { getGameboard: () => gameboard };
 };
 
 export default LandingPage;
