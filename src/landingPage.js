@@ -125,6 +125,11 @@ const LandingPage = (landingPageContainer, Player) => {
       player.initializeDefaultShips(gameboard, firstPlayer.id);
       const [partnerGridContainer] = gameboard.getGrids();
       populateUserPlaceableGrid(partnerGridContainer);
+      const ships = placeableShipsContainer.querySelectorAll('[id]');
+      ships.forEach((ship) => {
+        ship.setAttribute('draggable', 'false');
+        ship.classList.add('already-in-use');
+      });
     });
   };
 
