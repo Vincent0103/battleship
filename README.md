@@ -6,7 +6,10 @@ This project is part of my journey through The Odin Project course, specifically
 
 ## Features
 
-<!-- to be added -->
+- ai player who attacks adjacent shots of whenever it hits a ship
+- randomise button
+- ability to place ships in a grid
+- replayable game
 
 ## Technologies Used
 
@@ -16,10 +19,11 @@ This project is part of my journey through The Odin Project course, specifically
 
 ## Getting Started
 
-<!-- to be added -->
+Play Battleship here! <https://vincent0103.github.io/battleship>
 
 ## Testing
 
+- Execute `npm test` to test
 - All the tests are located in the [/test](./src/tests/) folder.
 - Please keep in mind that it is using an experimental feature of jest testing that allows me to use import/export statements of ES6, for more information check the test npm script in [package.json](./package.json).
 
