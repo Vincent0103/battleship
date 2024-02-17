@@ -7,10 +7,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default {
-  mode: 'development',
+  mode: 'production',
   entry: {
     index: './src/index.js',
+    game: './src/game.js',
     gameDOM: './src/gameDOM.js',
+    landingPage: './src/landingPage.js',
     gameboard: './src/factories/gameboard.js',
     player: './src/factories/player.js',
     ship: './src/factories/ship.js',
