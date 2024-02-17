@@ -81,40 +81,44 @@ const GameDOM = (Player) => {
     return false;
   };
 
-  const changeTurnIndicator = (winnerId = false) => {
-    if (Number.isInteger(winnerId)) {
-      if (winnerId === 0) turnIndicator.textContent = 'PLAYER 1 WINS';
-      else turnIndicator.textContent = 'PLAYER 2 WINS';
-      partnerGridContainer.classList.add('not-turn');
-      opponentGridContainer.classList.add('not-turn');
-      setTimeout(() => handleGameEnd(document.querySelector('.restart-screen')), 5000);
-      return 'game ended';
-    }
-    if (turnIndicator.classList.contains('player1')) {
-      turnIndicator.classList.remove('player1');
-      turnIndicator.classList.add('player2');
-      turnIndicator.textContent = 'OPPONENT TURN';
-      partnerGridContainer.classList.add('not-turn');
-      opponentGridContainer.classList.remove('not-turn');
-    } else {
-      turnIndicator.classList.remove('player2');
+  const Indicator = () => {
+    const changeTurnIndicator = (winnerId = false) => {
+      if (Number.isInteger(winnerId)) {
+        if (winnerId === 0) turnIndicator.textContent = 'PLAYER 1 WINS';
+        else turnIndicator.textContent = 'PLAYER 2 WINS';
+        partnerGridContainer.classList.add('not-turn');
+        opponentGridContainer.classList.add('not-turn');
+        setTimeout(() => handleGameEnd(document.querySelector('.restart-screen')), 5000);
+        return 'game ended';
+      }
+      if (turnIndicator.classList.contains('player1')) {
+        turnIndicator.classList.remove('player1');
+        turnIndicator.classList.add('player2');
+        turnIndicator.textContent = 'OPPONENT TURN';
+        partnerGridContainer.classList.add('not-turn');
+        opponentGridContainer.classList.remove('not-turn');
+      } else {
+        turnIndicator.classList.remove('player2');
+        turnIndicator.classList.add('player1');
+        turnIndicator.textContent = 'YOUR TURN';
+        opponentGridContainer.classList.add('not-turn');
+        partnerGridContainer.classList.remove('not-turn');
+      }
+      return true;
+    };
+
+    const addTurnIndicator = () => {
+      turnIndicator = document.createElement('div');
+      turnIndicator.classList.add('turn-indicator');
       turnIndicator.classList.add('player1');
       turnIndicator.textContent = 'YOUR TURN';
-      opponentGridContainer.classList.add('not-turn');
-      partnerGridContainer.classList.remove('not-turn');
-    }
-    return true;
+      return turnIndicator;
+    };
+
+    return { addTurnIndicator, changeTurnIndicator };
   };
 
-  const addTurnIndicator = () => {
-    turnIndicator = document.createElement('div');
-    turnIndicator.classList.add('turn-indicator');
-    turnIndicator.classList.add('player1');
-    turnIndicator.textContent = 'YOUR TURN';
-    return turnIndicator;
-  };
-
-  const listenOpponentGridCells = () => {
+  const listenOpponentGridCells = (indicator) => {
     const grid = document.querySelector('.grid-container.partner');
     const [player1, player2] = player.getPlayers();
 
@@ -126,7 +130,7 @@ const GameDOM = (Player) => {
 
     const checkGameEnded = (gameboard, playerId, otherPlayerId) => {
       if (gameboard.areAllShipsSunk(playerId)) {
-        changeTurnIndicator(otherPlayerId);
+        indicator.changeTurnIndicator(otherPlayerId);
         return true;
       }
       return false;
@@ -137,19 +141,19 @@ const GameDOM = (Player) => {
         const playerMarkInGrid = handleSVGIntoCell(e.target, player1.id, 'click');
         if (playerMarkInGrid) {
           setClickable(false);
-          changeTurnIndicator();
+          indicator.changeTurnIndicator();
           const attackedCoordinates = await player.attack(playerMarkInGrid.coordinates);
           const gameboard = player.getGameboard();
           if (checkGameEnded(gameboard, player1.id, player2.id) || checkGameEnded(gameboard, player1.id, player2.id)) {
             setClickable(false);
             return 'game ended';
           }
-          if (!attackedCoordinates || attackedCoordinates.length === 0) changeTurnIndicator();
+          if (!attackedCoordinates || attackedCoordinates.length === 0) indicator.changeTurnIndicator();
           else {
             const [y, x] = attackedCoordinates;
             const partnerCell = grid.children[y].children[x];
             handleSVGIntoCell(partnerCell, player2.id, 'click');
-            changeTurnIndicator();
+            indicator.changeTurnIndicator();
           }
           setClickable(true);
         }
@@ -203,7 +207,7 @@ const GameDOM = (Player) => {
 
   addBodyBgi();
   return {
-    addTurnIndicator, buildPlayerGrids, populateDOMGrid, listenOpponentGridCells,
+    Indicator, buildPlayerGrids, populateDOMGrid, listenOpponentGridCells,
   };
 };
 

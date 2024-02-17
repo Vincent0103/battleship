@@ -5,10 +5,10 @@ import GameDOM from './gameDOM.js';
 import Player from './factories/player.js';
 
 const game = () => {
-  const handleGamePage = ([partnerGrid, opponentGrid], page) => {
+  const handleGamePage = ([partnerGrid, opponentGrid], page, indicator) => {
     page.populateDOMGrid(partnerGrid, 0);
     page.populateDOMGrid(opponentGrid, 1);
-    page.listenOpponentGridCells();
+    page.listenOpponentGridCells(indicator);
   };
 
   const loadContent = () => {
@@ -26,13 +26,14 @@ const game = () => {
           if (Array.from(placeableShipsContainer.children).filter((child) => child.id).every((child) => child.getAttribute('draggable') === 'false')
             && !isGameStarted) {
             const pageContainer = document.querySelector('.page-container');
-            const turnIndicatorContainer = page.addTurnIndicator();
+            const indicator = page.Indicator();
+            const turnIndicatorContainer = indicator.addTurnIndicator();
             const gridContainers = page.buildPlayerGrids();
             pageContainer.append(turnIndicatorContainer, gridContainers[0], gridContainers[1]);
 
             const gameboard = landingPage.getGameboard();
             player.startGame('computer', gameboard);
-            handleGamePage(gameboard.getGrids(), page);
+            handleGamePage(gameboard.getGrids(), page, indicator);
 
             startBtn.classList.add('enabled');
             isGameStarted = true;
