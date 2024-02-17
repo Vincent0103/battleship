@@ -38,12 +38,8 @@ const Player = () => {
       oneSideCheck: false,
     };
     let hitShipAfterAMissedShot = false;
-    aiPlayer.notAttackedGridCoordinates = fillGridCoordinatesArray();
 
     const getRandomAiThinkingTime = () => Math.random() * 1900 + 100;
-
-    // eslint-disable-next-line max-len
-    const getValidAIRandomCoordinates = (player) => player.notAttackedGridCoordinates[Math.floor(Math.random() * player.notAttackedGridCoordinates.length)];
 
     const getNextCoordinates = (coordinates, YDifference, XDifference, iterationCount = 0) => {
       const currentCoordinates = coordinates;
@@ -70,31 +66,32 @@ const Player = () => {
       return { direction, newY, newX };
     };
 
-    const handleCurrentCoordinates = (coordinates = []) => {
-      let currentCoordinates = coordinates;
+    const handleCurrentCoordinates = () => {
+      let currentCoordinates = getRandomCoordinates();
       if (hitShipAfterAMissedShot) {
-        if (coordinatesToCheck.values.rightward.length > 0) {
-          currentCoordinates = coordinatesToCheck.values.rightward.pop();
-        } else if (coordinatesToCheck.values.downward.length > 0) {
-          currentCoordinates = coordinatesToCheck.values.downward.pop();
+        let hasCoordinates = false;
+        let direction = (Math.round(Math.random()) === 1) ? 'rightward' : 'downward';
+        if (coordinatesToCheck.values[direction].length > 0) {
+          currentCoordinates = coordinatesToCheck.values[direction].pop();
+          hasCoordinates = true;
+        } else if (direction === 'rightward') {
+          direction = 'downward';
+        } else {
+          direction = 'rightward';
         }
-      } else {
-        currentCoordinates = getValidAIRandomCoordinates(aiPlayer);
-      }
-      while (currentCoordinates.length === 0
-        && containsSubArray(aiPlayer.notAttackedGridCoordinates, currentCoordinates)) {
-        currentCoordinates = getValidAIRandomCoordinates(aiPlayer);
+
+        if (!hasCoordinates && coordinatesToCheck.values[direction].length > 0) {
+          currentCoordinates = coordinatesToCheck.values[direction].pop();
+        }
       }
 
-      aiPlayer.notAttackedGridCoordinates
-        .splice(aiPlayer.notAttackedGridCoordinates.indexOf(currentCoordinates), 1);
-      return currentCoordinates;
-    };
-
-    const getValidReceiveAttack = (receiveAttack) => {
-      let attack = receiveAttack;
-      while (!attack) attack = gameboard.receiveAttack(getRandomCoordinates(), aiPlayer.id);
-      return attack;
+      let receiveAttack = gameboard.receiveAttack(currentCoordinates, aiPlayer.id);
+      if (receiveAttack === 'game ended') return 'game ended';
+      while (!receiveAttack) {
+        currentCoordinates = getRandomCoordinates();
+        receiveAttack = gameboard.receiveAttack(currentCoordinates, aiPlayer.id);
+      }
+      return { currentCoordinates, receiveAttack };
     };
 
     const handleShipEncounter = (currentCoordinates, receiveAttack) => {
@@ -106,8 +103,8 @@ const Player = () => {
           directions[direction].forEach(([dy, dx]) => {
             const newY = currentCoordinates[0] + dy;
             const newX = currentCoordinates[1] + dx;
-            if (containsSubArray(aiPlayer.notAttackedGridCoordinates, [newY, newX])
-             && isNotOutOfBoundOfGrid(newY, newX)) {
+            if (isNotOutOfBoundOfGrid(newY, newX)
+            && !containsSubArray(aiPlayer.attackedCoordinates, [newY, newX])) {
               coordinatesToCheck.values[direction].push([newY, newX]);
             }
           });
@@ -125,32 +122,31 @@ const Player = () => {
 
         if (valuesOfGetNextCoordinates) {
           coordinatesToCheck.lastArray = currentCoordinates;
-          if (containsSubArray(aiPlayer.notAttackedGridCoordinates, [newY, newX])
-            && isNotOutOfBoundOfGrid(newY, newX)) {
+          if (isNotOutOfBoundOfGrid(newY, newX)
+          && !containsSubArray(aiPlayer.attackedCoordinates, [newY, newX])) {
             coordinatesToCheck.values[direction].push([newY, newX]);
           }
         }
       } else if (!coordinatesToCheck.oneSideCheck && hitShipAfterAMissedShot
         && typeof receiveAttack === 'object') {
         coordinatesToCheck.oneSideCheck = true;
-      } else {
+      } else if (coordinatesToCheck.oneSideCheck && hitShipAfterAMissedShot
+         && typeof receiveAttack === 'object'
+         && coordinatesToCheck.values.rightward.length === 0
+         && coordinatesToCheck.values.downward.length === 0) {
         hitShipAfterAMissedShot = false;
         coordinatesToCheck.sourceArray = null;
         coordinatesToCheck.lastArray = null;
         coordinatesToCheck.oneSideCheck = false;
-        coordinatesToCheck.values.rightward.length = 0;
-        coordinatesToCheck.values.downward.length = 0;
       }
     };
 
     const attack = () => {
-      const currentCoordinates = getValidAIRandomCoordinates(aiPlayer);
-      // uncomment the line below in order to use the ai (ai very buggy, use it at your own risk)
-      // const currentCoordinates = handleCurrentCoordinates();
-      let receiveAttack = gameboard.receiveAttack(currentCoordinates, aiPlayer.id);
-      receiveAttack = getValidReceiveAttack(receiveAttack);
-      // uncomment the line below in order to use the ai (ai very buggy, use it at your own risk)
-      // handleShipEncounter(currentCoordinates, receiveAttack);
+      const result = handleCurrentCoordinates();
+      if (result === 'game ended') return result;
+
+      const { currentCoordinates, receiveAttack } = result;
+      handleShipEncounter(currentCoordinates, receiveAttack);
 
       if (typeof receiveAttack === 'object') {
         aiPlayer.attackedCoordinates.push(currentCoordinates);
@@ -159,7 +155,7 @@ const Player = () => {
           // setTimeout(() => resolve(currentCoordinates), getRandomAiThinkingTime());
           setTimeout(() => resolve(currentCoordinates), 0);
         });
-      } if (receiveAttack === 'game ended') return receiveAttack;
+      }
       return false;
     };
 

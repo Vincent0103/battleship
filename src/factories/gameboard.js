@@ -44,13 +44,11 @@ const Gameboard = () => {
       for (let i = 0; i < getLength(); i += 1) {
         currentCell = currentGrid[y][x + i];
         currentCell.shipId = getId();
-        currentCell.isHit = false;
       }
     } else {
       for (let j = 0; j < getLength(); j += 1) {
         currentCell = currentGrid[y + j][x];
         currentCell.shipId = getId();
-        currentCell.isHit = false;
       }
     }
     return currentGrid;
@@ -104,6 +102,7 @@ const Gameboard = () => {
     }
     if (currentCell.isHit) return false;
 
+    if (!currentCell.isHit) currentCell.isHit = true;
     const missedShotCoordinates = { coordinates, ofPlayerId: currentId };
     missedShotsCoordinates.push(missedShotCoordinates);
     return missedShotCoordinates;
