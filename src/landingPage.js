@@ -7,9 +7,6 @@ const LandingPage = (landingPageContainer, GameDOM, Player) => {
   const placeableShipsContainer = landingPageDIV.querySelector('.placeable-ships-container');
   let gridContainer = landingPageDIV.querySelector('.grid-container.user-placeable');
   const gameboard = Gameboard();
-  let shipFunction = null;
-  let currentlyDraggedShip = null;
-  let isShipBadDropped = true;
 
   const toggleSquareClasses = (line, gridContainerX, loopStart, loopEnd, loopStep, extraClass) => {
     for (let i = loopStart; i !== loopEnd; i += loopStep) {
@@ -56,6 +53,9 @@ const LandingPage = (landingPageContainer, GameDOM, Player) => {
     });
   };
 
+  let isShipBadDropped = true;
+  let currentlyDraggedShip = null;
+  let shipFunction = null;
   const handleShips = () => {
     const addShipCells = (shipContainer, shipLength) => {
       for (let i = 0; i < shipLength; i += 1) {
@@ -134,7 +134,7 @@ const LandingPage = (landingPageContainer, GameDOM, Player) => {
         if (handleShipPlacement(line, gridContainerX, shipLength)) isShipBadDropped = false;
       }
       return false;
-    }
+    };
 
     Array.from(gridContainerParam.children).forEach((line) => {
       Array.from(line.children).forEach((square) => {
