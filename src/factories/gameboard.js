@@ -31,12 +31,23 @@ const Gameboard = () => {
     return { partnerGrid, opponentGrid };
   };
 
-  const getShipFromCell = (cell, ofPlayerId) => {
-    const ships = (ofPlayerId === 1) ? opponentShips : partnerShips;
-    const targetId = cell.shipId;
-    const [shipRetrieved] = ships.filter((ship) => ship.getId() === targetId);
-    if (!shipRetrieved) throw new Error('Couldn\'t find the ship');
-    return shipRetrieved;
+  const areCellsAvailable = (shipLength, [a, b], ofPlayerId, orientation) => {
+    const currentGrid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
+
+    const isCellAvailable = ([y, x]) => {
+      const hasShipId = () => isNotOutOfBoundOfGrid(y, x)
+      && Number.isInteger(currentGrid[y][x].shipId);
+
+      if (x > 9 || x < 0 || y > 9 || y < 0) return false;
+      const offsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 0], [0, 1], [1, -1], [1, 0], [1, 1]];
+      return !(offsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx)));
+    };
+
+    for (let i = 0; i < shipLength; i += 1) {
+      const [y, x] = (orientation === 'rightward') ? [a, b + i] : [a + i, b];
+      if (!isCellAvailable([y, x])) return false;
+    }
+    return true;
   };
 
   const occupyCells = ({ getLength, getId }, [y, x], ofPlayerId, orientation) => {
@@ -56,23 +67,6 @@ const Gameboard = () => {
     return currentGrid;
   };
 
-  const hasShipId = (grid, y, x) => isNotOutOfBoundOfGrid(y, x)
-   && Number.isInteger(grid[y][x].shipId);
-
-  const isCellAvailable = ([y, x], ofPlayerId) => {
-    if (x > 9 || x < 0 || y > 9 || y < 0) return false;
-    const currentGrid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
-    const offsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 0], [0, 1], [1, -1], [1, 0], [1, 1]];
-    return !(offsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx)));
-  };
-
-  const areCellsAvailable = (shipLength, [y, x], ofPlayerId, orientation) => {
-    for (let i = 0; i < shipLength; i += 1) {
-      if (!isCellAvailable((orientation === 'rightward') ? [y, x + i] : [y + i, x], ofPlayerId)) return false;
-    }
-    return true;
-  };
-
   const placeShip = (ship, coordinates, ofPlayerId = 0, orientation = 'rightward') => {
     if (areCellsAvailable(ship.getLength(), coordinates, ofPlayerId, orientation)) {
       if (ofPlayerId === 0) partnerShips.push(ship);
@@ -85,6 +79,14 @@ const Gameboard = () => {
   const areAllShipsSunk = (ofPlayerId) => {
     const playersShips = (ofPlayerId === 0) ? partnerShips : opponentShips;
     return playersShips.every((ship) => ship.isSunk());
+  };
+
+  const getShipFromCell = (cell, ofPlayerId) => {
+    const ships = (ofPlayerId === 1) ? opponentShips : partnerShips;
+    const targetId = cell.shipId;
+    const [shipRetrieved] = ships.filter((ship) => ship.getId() === targetId);
+    if (!shipRetrieved) throw new Error('Couldn\'t find the ship');
+    return shipRetrieved;
   };
 
   const receiveAttack = (coordinates, toPlayerId) => {
