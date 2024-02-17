@@ -4,6 +4,7 @@ import ExplosionIcon from './components/bomb-explosion.svg';
 import { buildGrid } from './utilities.js';
 // eslint-disable-next-line import/no-cycle
 import Game from './game.js';
+import game from './game.js';
 
 const GameDOM = (Player) => {
   const player = Player;
@@ -115,50 +116,54 @@ const GameDOM = (Player) => {
 
   const listenOpponentGridCells = () => {
     const grid = document.querySelector('.grid-container.partner');
-    let clickable = true;
     const [player1, player2] = player.getPlayers();
+
+    let clickable = true;
+    const getClickable = () => clickable;
+    const setClickable = (value) => {
+      clickable = value;
+    };
+
+    const checkGameEnded = (gameboard, playerId, otherPlayerId) => {
+      if (gameboard.areAllShipsSunk(playerId)) {
+        changeTurnIndicator(otherPlayerId);
+        return true;
+      }
+      return false;
+    };
+
+    const handleClick = async (e) => {
+      if (getClickable()) {
+        const playerMarkInGrid = handleSVGIntoCell(e.target, player1.id, 'click');
+        if (playerMarkInGrid) {
+          setClickable(false);
+          changeTurnIndicator();
+          const attackedCoordinates = await player.attack(playerMarkInGrid.coordinates);
+          const gameboard = player.getGameboard();
+          if (checkGameEnded(gameboard, player1.id, player2.id) || checkGameEnded(gameboard, player1.id, player2.id)) {
+            setClickable(false);
+            return 'game ended';
+          }
+          if (!attackedCoordinates || attackedCoordinates.length === 0) changeTurnIndicator();
+          else {
+            const [y, x] = attackedCoordinates;
+            const partnerCell = grid.children[y].children[x];
+            handleSVGIntoCell(partnerCell, player2.id, 'click');
+            changeTurnIndicator();
+          }
+          setClickable(true);
+        }
+      }
+      return true;
+    };
+
     for (let i = 0; i < 10; i += 1) {
       const line = opponentGridContainer.children[i];
       for (let j = 0; j < 10; j += 1) {
         const square = line.children[j];
-        square.addEventListener('mouseenter', (e) => {
-          handleSVGIntoCell(e.target, player1.id, 'mouseenter');
-        });
-        square.addEventListener('mouseleave', (e) => {
-          handleSVGIntoCell(e.target, player1.id, 'mouseleave');
-        });
-        // eslint-disable-next-line no-loop-func
-        square.addEventListener('click', (async (e) => {
-          if (clickable) {
-            const playerMarkInGrid = handleSVGIntoCell(e.target, player1.id, 'click');
-            if (playerMarkInGrid) {
-              clickable = false;
-              let y; let x;
-              changeTurnIndicator();
-              const attackedCoordinates = await player.attack(playerMarkInGrid.coordinates);
-              const gameboard = player.getGameboard();
-              if (gameboard.areAllShipsSunk(player1.id)) {
-                changeTurnIndicator(player2.id);
-                clickable = false;
-                return 'game ended';
-              }
-              if (gameboard.areAllShipsSunk(player2.id)) {
-                changeTurnIndicator(player1.id);
-                clickable = false;
-                return 'game ended';
-              }
-              if (!attackedCoordinates || attackedCoordinates.length === 0) changeTurnIndicator();
-              else {
-                [y, x] = attackedCoordinates;
-                const partnerCell = grid.children[y].children[x];
-                handleSVGIntoCell(partnerCell, player2.id, 'click');
-                changeTurnIndicator();
-              }
-              clickable = true;
-            }
-          }
-          return true;
-        }));
+        square.addEventListener('mouseenter', (e) => handleSVGIntoCell(e.target, player1.id, 'mouseenter'));
+        square.addEventListener('mouseleave', (e) => handleSVGIntoCell(e.target, player1.id, 'mouseleave'));
+        square.addEventListener('click', handleClick);
       }
     }
   };

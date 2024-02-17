@@ -156,7 +156,8 @@ const Player = () => {
         aiPlayer.attackedCoordinates.push(currentCoordinates);
         changeTurn();
         return new Promise((resolve) => {
-          setTimeout(() => resolve(currentCoordinates), getRandomAiThinkingTime());
+          // setTimeout(() => resolve(currentCoordinates), getRandomAiThinkingTime());
+          setTimeout(() => resolve(currentCoordinates), 0);
         });
       } if (receiveAttack === 'game ended') return receiveAttack;
       return false;
