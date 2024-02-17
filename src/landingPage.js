@@ -6,9 +6,7 @@ const LandingPage = (landingPageContainer, GameDOM, Player) => {
   const landingPageDIV = landingPageContainer;
   const placeableShipsContainer = landingPageDIV.querySelector('.placeable-ships-container');
   let gridContainer = landingPageDIV.querySelector('.grid-container.user-placeable');
-  const randomizeBtn = placeableShipsContainer.querySelector('.randomize-btn');
   const gameboard = Gameboard();
-  gameboard.buildGrids();
   let shipFunction = null;
   let currentlyDraggedShip = null;
   let isShipBadDropped = true;
@@ -21,114 +19,6 @@ const LandingPage = (landingPageContainer, GameDOM, Player) => {
       currentSquare.classList.toggle('over');
       if (extraClass) currentSquare.classList.toggle(extraClass);
     }
-  };
-
-  const handleShipPlacement = (line, gridContainerX, ship) => {
-    if (!gameboard.placeShip(ship, [+line.getAttribute('data-line'), gridContainerX], 0, 'rightward')) {
-      toggleSquareClasses(line, gridContainerX, 0, ship.getLength(), 1, 'not-placeable');
-      return false;
-    }
-    for (let i = ship.getLength() - 1; i >= 0; i -= 1) {
-      const currentSquare = line.children[gridContainerX + i];
-      currentSquare.classList.remove('over');
-      currentSquare.classList.add('ship');
-    }
-    return true;
-  };
-
-  const areAllShipsPlacedInGrid = () => {
-    const placeableShips = Array.from(placeableShipsContainer.querySelectorAll('[id]'));
-    return placeableShips.every((item) => item.getAttribute('draggable') === 'false');
-  };
-
-  const handleGridHoverHint = (line, gridContainerX, ship) => {
-    if (!gameboard.areCellsAvailable(ship.getLength(), [+line.getAttribute('data-line'), gridContainerX], 0, 'rightward')) {
-      toggleSquareClasses(line, gridContainerX, 0, ship.getLength(), 1, 'not-placeable');
-    } else {
-      toggleSquareClasses(line, gridContainerX, ship.getLength() - 1, -1, -1);
-    }
-  };
-
-  const addShipCells = (shipContainer, shipLength) => {
-    for (let i = 0; i < shipLength; i += 1) {
-      const shipCell = document.createElement('div');
-      shipCell.classList.add('ship-cell');
-      shipContainer.appendChild(shipCell);
-    }
-  };
-
-  function listenDragStart() {
-    if (this.draggable) {
-      this.classList.add('already-in-use');
-      shipFunction = Ship(this.children.length);
-      currentlyDraggedShip = this;
-    }
-  }
-
-  function listenDragEnd() {
-    if (isShipBadDropped && this.draggable === true) {
-      this.classList.remove('already-in-use');
-    } else {
-      this.classList.add('already-in-use');
-      this.draggable = false;
-      isShipBadDropped = true;
-    }
-  }
-
-  function listenDragOver(e) {
-    e.preventDefault();
-    return false;
-  }
-
-  function listenDragEnterOrLeave(square, ship) {
-    if (currentlyDraggedShip.draggable === true) {
-      const line = square.parentElement;
-      const gridContainerX = +square.getAttribute('data-square');
-      handleGridHoverHint(line, gridContainerX, ship);
-    }
-  }
-
-  function listenDrop(e, square, shipLength) {
-    e.stopPropagation();
-    if (currentlyDraggedShip.draggable === true) {
-      const line = square.parentElement;
-      const gridContainerX = +square.getAttribute('data-square');
-      if (handleShipPlacement(line, gridContainerX, shipLength)) isShipBadDropped = false;
-    }
-    return false;
-  }
-
-  const emptyUserPlaceableGrid = (board) => {
-    board.forEach((line, y) => line.forEach((square, x) => {
-      const cell = gridContainer.children[y].children[x];
-      if (cell.classList.contains('ship')) {
-        cell.classList.remove('ship');
-      }
-    }));
-  };
-
-  const populateUserPlaceableGrid = (board) => {
-    emptyUserPlaceableGrid(board);
-    board.forEach((line, y) => line.forEach((square, x) => {
-      if (Number.isInteger(square.shipId)) {
-        const cell = gridContainer.children[y].children[x];
-        cell.classList.add('ship');
-      }
-    }));
-  };
-
-  const listenRandomizeBtn = (player) => {
-    randomizeBtn.addEventListener('click', () => {
-      const [firstPlayer] = player.getPlayers();
-      player.initializeDefaultShips(gameboard, firstPlayer.id);
-      const [partnerGridContainer] = gameboard.getGrids();
-      populateUserPlaceableGrid(partnerGridContainer);
-      const ships = placeableShipsContainer.querySelectorAll('[id]');
-      ships.forEach((ship) => {
-        ship.setAttribute('draggable', 'false');
-        ship.classList.add('already-in-use');
-      });
-    });
   };
 
   const listenStartBtn = (player) => {
@@ -152,6 +42,11 @@ const LandingPage = (landingPageContainer, GameDOM, Player) => {
       page.listenOpponentGridCells(Indicator);
     };
 
+    const areAllShipsPlacedInGrid = () => {
+      const placeableShips = Array.from(placeableShipsContainer.querySelectorAll('[id]'));
+      return placeableShips.every((item) => item.getAttribute('draggable') === 'false');
+    };
+
     startBtn.addEventListener('click', () => {
       if (areAllShipsPlacedInGrid()) {
         handleGamePage();
@@ -162,6 +57,32 @@ const LandingPage = (landingPageContainer, GameDOM, Player) => {
   };
 
   const handleShips = () => {
+    const addShipCells = (shipContainer, shipLength) => {
+      for (let i = 0; i < shipLength; i += 1) {
+        const shipCell = document.createElement('div');
+        shipCell.classList.add('ship-cell');
+        shipContainer.appendChild(shipCell);
+      }
+    };
+
+    function listenDragStart() {
+      if (this.draggable) {
+        this.classList.add('already-in-use');
+        shipFunction = Ship(this.children.length);
+        currentlyDraggedShip = this;
+      }
+    }
+
+    function listenDragEnd() {
+      if (isShipBadDropped && this.draggable === true) {
+        this.classList.remove('already-in-use');
+      } else {
+        this.classList.add('already-in-use');
+        this.draggable = false;
+        isShipBadDropped = true;
+      }
+    }
+
     Array.from(placeableShipsContainer.children).forEach((ship) => {
       addShipCells(ship, ship.getAttribute('data-length'));
       ship.addEventListener('dragstart', listenDragStart);
@@ -170,6 +91,51 @@ const LandingPage = (landingPageContainer, GameDOM, Player) => {
   };
 
   const handleGridContainer = (gridContainerParam) => {
+    const handleGridHoverHint = (line, gridContainerX, ship) => {
+      if (!gameboard.areCellsAvailable(ship.getLength(), [+line.getAttribute('data-line'), gridContainerX], 0, 'rightward')) {
+        toggleSquareClasses(line, gridContainerX, 0, ship.getLength(), 1, 'not-placeable');
+      } else {
+        toggleSquareClasses(line, gridContainerX, ship.getLength() - 1, -1, -1);
+      }
+    };
+
+    const listenDragEnterOrLeave = (square, ship) => {
+      if (currentlyDraggedShip.draggable === true) {
+        const line = square.parentElement;
+        const gridContainerX = +square.getAttribute('data-square');
+        handleGridHoverHint(line, gridContainerX, ship);
+      }
+    };
+
+    const listenDragOver = (e) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const listenDrop = (e, square, shipLength) => {
+      e.stopPropagation();
+
+      const handleShipPlacement = (line, gridContainerX, ship) => {
+        if (!gameboard.placeShip(ship, [+line.getAttribute('data-line'), gridContainerX], 0, 'rightward')) {
+          toggleSquareClasses(line, gridContainerX, 0, ship.getLength(), 1, 'not-placeable');
+          return false;
+        }
+        for (let i = ship.getLength() - 1; i >= 0; i -= 1) {
+          const currentSquare = line.children[gridContainerX + i];
+          currentSquare.classList.remove('over');
+          currentSquare.classList.add('ship');
+        }
+        return true;
+      };
+
+      if (currentlyDraggedShip.draggable === true) {
+        const line = square.parentElement;
+        const gridContainerX = +square.getAttribute('data-square');
+        if (handleShipPlacement(line, gridContainerX, shipLength)) isShipBadDropped = false;
+      }
+      return false;
+    }
+
     Array.from(gridContainerParam.children).forEach((line) => {
       Array.from(line.children).forEach((square) => {
         square.addEventListener('dragover', listenDragOver);
@@ -183,8 +149,45 @@ const LandingPage = (landingPageContainer, GameDOM, Player) => {
     });
   };
 
+  const populateUserPlaceableGrid = (board) => {
+    let cell;
+
+    const emptyUserPlaceableGrid = () => {
+      board.forEach((line, y) => line.forEach((square, x) => {
+        cell = gridContainer.children[y].children[x];
+        if (cell.classList.contains('ship')) {
+          cell.classList.remove('ship');
+        }
+      }));
+    };
+
+    emptyUserPlaceableGrid(board);
+    board.forEach((line, y) => line.forEach((square, x) => {
+      if (Number.isInteger(square.shipId)) {
+        cell = gridContainer.children[y].children[x];
+        cell.classList.add('ship');
+      }
+    }));
+  };
+
+  const listenRandomizeBtn = (player) => {
+    const randomizeBtn = placeableShipsContainer.querySelector('.randomize-btn');
+    randomizeBtn.addEventListener('click', () => {
+      const [firstPlayer] = player.getPlayers();
+      player.initializeDefaultShips(gameboard, firstPlayer.id);
+      const [partnerGridContainer] = gameboard.getGrids();
+      populateUserPlaceableGrid(partnerGridContainer);
+      const ships = placeableShipsContainer.querySelectorAll('[id]');
+      ships.forEach((ship) => {
+        ship.setAttribute('draggable', 'false');
+        ship.classList.add('already-in-use');
+      });
+    });
+  };
+
   const addContent = () => {
     const player = Player;
+    gameboard.buildGrids();
     gridContainer = buildGrid(gridContainer);
     handleShips();
     handleGridContainer(gridContainer);
