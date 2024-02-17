@@ -31,21 +31,20 @@ const Gameboard = () => {
     return { partnerGrid, opponentGrid };
   };
 
-  const areCellsAvailable = (shipLength, [a, b], ofPlayerId, orientation) => {
+  const hasShipId = (grid, y, x) => isNotOutOfBoundOfGrid(y, x)
+  && Number.isInteger(grid[y][x].shipId);
+
+  const isCellAvailable = ([y, x], grid) => {
+    if (x > 9 || x < 0 || y > 9 || y < 0) return false;
+    const offsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 0], [0, 1], [1, -1], [1, 0], [1, 1]];
+    return !(offsets.some(([dy, dx]) => hasShipId(grid, y + dy, x + dx)));
+  };
+
+  const areCellsAvailable = (shipLength, [y, x], ofPlayerId, orientation) => {
     const currentGrid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
-
-    const isCellAvailable = ([y, x]) => {
-      const hasShipId = () => isNotOutOfBoundOfGrid(y, x)
-      && Number.isInteger(currentGrid[y][x].shipId);
-
-      if (x > 9 || x < 0 || y > 9 || y < 0) return false;
-      const offsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 0], [0, 1], [1, -1], [1, 0], [1, 1]];
-      return !(offsets.some(([dy, dx]) => hasShipId(currentGrid, y + dy, x + dx)));
-    };
-
     for (let i = 0; i < shipLength; i += 1) {
-      const [y, x] = (orientation === 'rightward') ? [a, b + i] : [a + i, b];
-      if (!isCellAvailable([y, x])) return false;
+      const [a, b] = (orientation === 'rightward') ? [y, x + i] : [y + i, x];
+      if (!isCellAvailable([a, b], currentGrid)) return false;
     }
     return true;
   };

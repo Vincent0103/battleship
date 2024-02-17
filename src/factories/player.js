@@ -25,12 +25,10 @@ const Player = () => {
     }
   };
 
-  // eslint-disable-next-line max-len
   const getRandomCoordinates = () => [Math.floor(Math.random() * GRID_XY_LIMIT), Math.floor(Math.random() * GRID_XY_LIMIT)];
 
   const AI = (player) => {
     const aiPlayer = player;
-    const directions = { rightward: [[0, -1], [0, 1]], downward: [[-1, 0], [1, 0]] };
     const coordinatesToCheck = {
       sourceArray: null,
       lastArray: null,
@@ -94,11 +92,18 @@ const Player = () => {
       return { currentCoordinates, receiveAttack };
     };
 
+    const directions = { rightward: [[0, -1], [0, 1]], downward: [[-1, 0], [1, 0]] };
     const handleShipEncounter = (currentCoordinates, receiveAttack) => {
-      if (!hitShipAfterAMissedShot && receiveAttack.getHits && receiveAttack.getLength) {
-        hitShipAfterAMissedShot = true;
-        coordinatesToCheck.sourceArray = currentCoordinates;
-        coordinatesToCheck.lastArray = currentCoordinates;
+      const isShipAttacked = receiveAttack.getHits && receiveAttack.getLength && typeof receiveAttack === 'object';
+      const isFirstTimeShipHit = !hitShipAfterAMissedShot && isShipAttacked;
+      const isSameShipHit = hitShipAfterAMissedShot && isShipAttacked;
+      const isOneSideShipHit = !coordinatesToCheck.oneSideCheck && hitShipAfterAMissedShot && typeof receiveAttack === 'object';
+      const isEntireShipHit = coordinatesToCheck.oneSideCheck && hitShipAfterAMissedShot
+      && typeof receiveAttack === 'object'
+      && coordinatesToCheck.values.rightward.length === 0
+      && coordinatesToCheck.values.downward.length === 0;
+
+      const addAdjacentCoordinates = () => {
         Object.keys(directions).forEach((direction) => {
           directions[direction].forEach(([dy, dx]) => {
             const newY = currentCoordinates[0] + dy;
@@ -109,31 +114,31 @@ const Player = () => {
             }
           });
         });
-      } else if (hitShipAfterAMissedShot && receiveAttack.getHits && receiveAttack.getLength) {
+      };
+
+      const addDirectionalCoordinates = (direction, y, x) => {
+        coordinatesToCheck.lastArray = currentCoordinates;
+        if (isNotOutOfBoundOfGrid(y, x)
+          && !containsSubArray(aiPlayer.attackedCoordinates, [y, x])) {
+          coordinatesToCheck.values[direction].push([y, x]);
+        }
+      };
+
+      if (isFirstTimeShipHit) {
+        hitShipAfterAMissedShot = true;
+        coordinatesToCheck.sourceArray = currentCoordinates;
+        coordinatesToCheck.lastArray = currentCoordinates;
+        addAdjacentCoordinates();
+      } else if (isSameShipHit) {
         const YDifference = currentCoordinates[0] - coordinatesToCheck.lastArray[0];
         const XDifference = currentCoordinates[1] - coordinatesToCheck.lastArray[1];
 
-        const valuesOfGetNextCoordinates = getNextCoordinates(
-          currentCoordinates,
-          YDifference,
-          XDifference,
-        );
+        const valuesOfGetNextCoordinates = getNextCoordinates(currentCoordinates, YDifference, XDifference);
         const { direction, newY, newX } = valuesOfGetNextCoordinates;
-
-        if (valuesOfGetNextCoordinates) {
-          coordinatesToCheck.lastArray = currentCoordinates;
-          if (isNotOutOfBoundOfGrid(newY, newX)
-          && !containsSubArray(aiPlayer.attackedCoordinates, [newY, newX])) {
-            coordinatesToCheck.values[direction].push([newY, newX]);
-          }
-        }
-      } else if (!coordinatesToCheck.oneSideCheck && hitShipAfterAMissedShot
-        && typeof receiveAttack === 'object') {
+        if (valuesOfGetNextCoordinates) addDirectionalCoordinates(direction, newY, newX);
+      } else if (isOneSideShipHit) {
         coordinatesToCheck.oneSideCheck = true;
-      } else if (coordinatesToCheck.oneSideCheck && hitShipAfterAMissedShot
-         && typeof receiveAttack === 'object'
-         && coordinatesToCheck.values.rightward.length === 0
-         && coordinatesToCheck.values.downward.length === 0) {
+      } else if (isEntireShipHit) {
         hitShipAfterAMissedShot = false;
         coordinatesToCheck.sourceArray = null;
         coordinatesToCheck.lastArray = null;
@@ -152,8 +157,7 @@ const Player = () => {
         aiPlayer.attackedCoordinates.push(currentCoordinates);
         changeTurn();
         return new Promise((resolve) => {
-          // setTimeout(() => resolve(currentCoordinates), getRandomAiThinkingTime());
-          setTimeout(() => resolve(currentCoordinates), 0);
+          setTimeout(() => resolve(currentCoordinates), getRandomAiThinkingTime());
         });
       }
       return false;
