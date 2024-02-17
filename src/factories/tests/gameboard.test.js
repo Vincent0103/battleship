@@ -81,6 +81,7 @@ describe('Gameboard', () => {
     grid = gameboard3.emptyGrid(PLAYER_ID, grid);
     grid.forEach((line) => line.forEach((square) => {
       expect(square.shipId).toBeNull();
+      expect(square.isHit).toBeFalsy();
     }));
   });
 

@@ -6,7 +6,8 @@ const Gameboard = () => {
   const missedShotsCoordinates = [];
 
   const emptyGrid = (ofPlayerId) => {
-    const grid = (ofPlayerId === 0) ? partnerGrid : opponentGrid;
+    const [grid, ships] = (ofPlayerId === 0) ? [partnerGrid, partnerShips]
+      : [opponentGrid, opponentShips];
     grid.forEach((line) => {
       line.forEach((square) => {
         const cell = square;
@@ -14,6 +15,7 @@ const Gameboard = () => {
         cell.isHit = false;
       });
     });
+    ships.length = 0;
 
     return grid;
   };

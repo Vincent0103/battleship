@@ -176,6 +176,7 @@ const LandingPage = (landingPageContainer, GameDOM, Player) => {
       const [firstPlayer] = player.getPlayers();
       player.initializeDefaultShips(gameboard, firstPlayer.id);
       const [partnerGridContainer] = gameboard.getGrids();
+      console.log(partnerGridContainer);
       populateUserPlaceableGrid(partnerGridContainer);
       const ships = placeableShipsContainer.querySelectorAll('[id]');
       ships.forEach((ship) => {

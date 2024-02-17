@@ -1,5 +1,5 @@
 import Gameboard from './gameboard.js';
-import { containsSubArray, isNotOutOfBoundOfGrid, fillGridCoordinatesArray } from '../utilities.js';
+import { containsSubArray, isNotOutOfBoundOfGrid } from '../utilities.js';
 import Ship from './ship.js';
 
 const Player = () => {
@@ -167,14 +167,8 @@ const Player = () => {
     const shipLengths = [5, 4, 3, 3, 2];
     for (let i = 0; i < 5; i += 1) {
       const currentPlayer = (forPlayerId === 0) ? player1 : player2;
-      const getRandomOrientation = Math.round(Math.random());
-      const orientation = (getRandomOrientation === 0) ? 'rightward' : 'downward';
-      let isPlaceable = board.placeShip(
-        Ship(shipLengths[i]),
-        getRandomCoordinates(),
-        currentPlayer.id,
-        orientation,
-      );
+      const orientation = (Math.round(Math.random()) === 1) ? 'rightward' : 'downward';
+      let isPlaceable = false;
       while (!isPlaceable) {
         isPlaceable = board.placeShip(
           Ship(shipLengths[i]),
@@ -184,7 +178,6 @@ const Player = () => {
         );
       }
     }
-    return board;
   };
 
   const ai = AI((player1.turn) ? player2 : player1);

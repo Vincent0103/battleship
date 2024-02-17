@@ -134,8 +134,9 @@ const GameDOM = (Player) => {
           setClickable(false);
           indicator.changeTurnIndicator();
           const attackedCoordinates = await player.attack(playerMarkInGrid.coordinates);
-          console.log(attackedCoordinates);
           const gameboard = player.getGameboard();
+          const [partnerGridContainer] = gameboard.getGrids();
+          console.log(partnerGridContainer);
           if (!attackedCoordinates || attackedCoordinates.length === 0) indicator.changeTurnIndicator();
           else if (attackedCoordinates === 'game ended') {
             indicator.changeTurnIndicator(player1.id);
